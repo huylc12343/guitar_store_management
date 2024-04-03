@@ -5,17 +5,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:title="Home"
+        android:textColor = "@color/white"
         android:id="@+id/homeNav"
         android:icon="@drawable/home_icon"/>
     <item
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:title="Storage"
+        android:textColor = "@color/white"
         android:id="@+id/storageNav"
-        android:icon="@drawable/baseline_shopping_cart_checkout_24"/>
+        android:icon="@drawable/cardboard_box_closed_svgrepo_com"/>
     <item
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor = "@color/white"
         android:title="User"
         android:id="@+id/userNav"
         android:icon="@drawable/user_icon"/>

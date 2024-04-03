@@ -2,7 +2,7 @@
     android:id="@+id/txtTextView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="100dp"
+    android:paddingLeft="20dp"
     android:paddingBottom="8dp"
     android:paddingTop="8dp"
 

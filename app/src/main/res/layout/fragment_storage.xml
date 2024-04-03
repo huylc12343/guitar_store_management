@@ -70,7 +70,6 @@
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Mở"
                         android:id="@+id/btnGuitarCategory"
                         android:background="#00000000"
                         android:layout_centerVertical="true"
@@ -80,7 +79,7 @@
                         android:layout_height="@dimen/size150dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/user_icon" />
+                        android:src="@drawable/electric_guitar_music_instrument_svgrepo_com" />
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
             <androidx.cardview.widget.CardView
@@ -102,11 +101,10 @@
                         android:layout_width="@dimen/size150dp"
                         android:layout_height="@dimen/size150dp"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/user_icon" />
+                        android:src="@drawable/amplifier_speaker_loud_svgrepo_com" />
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Mở"
                         android:id="@+id/btnAmpCategory"
                         android:background="#00000000"
                         android:layout_centerVertical="true"
@@ -159,7 +157,7 @@
                         android:layout_height="@dimen/size150dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/user_icon" />
+                        android:src="@drawable/guitar_pedal_2_svgrepo_com" />
 
 
                 </RelativeLayout>
@@ -184,7 +182,7 @@
                         android:layout_width="@dimen/size150dp"
                         android:layout_height="@dimen/size150dp"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/user_icon" />
+                        android:src="@drawable/cable_plug_connector_svgrepo_com" />
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

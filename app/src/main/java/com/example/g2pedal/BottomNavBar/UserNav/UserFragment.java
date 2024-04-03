@@ -86,7 +86,8 @@ public class UserFragment extends Fragment {
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPopupMenu(v);
+
+//                showPopupMenu(v);
             }
         });
 //        listView = view.findViewById(R.id.userListView);

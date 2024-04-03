@@ -17,18 +17,50 @@
                 android:layout_gravity="center_horizontal"
                 android:padding="5dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/img_2855"
+                android:src="@drawable/shop_logo"
                 app:shapeAppearanceOverlay="@style/circular"
-                app:strokeColor="#FF4500"
+                app:strokeColor="@color/red"
                 app:strokeWidth="3dp"
                 android:clickable="true"/>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="UserFragment" />
+                android:text="User"
+                android:textStyle="bold"
+                android:textSize="@dimen/size30sp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray"
+                android:text="Quang Huy"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:paddingLeft="20dp"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray"
+                android:text="0961264222"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="30dp"
+                android:paddingLeft="20dp"
+                android:layout_marginRight="30dp"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray"
+                android:text="huylc12343@gmail.com"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="30dp"
+                android:paddingLeft="20dp"
+                android:layout_marginRight="30dp"
+                />
             <ListView
+                android:padding="30dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/userNavListview"/>
@@ -44,7 +76,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/red"
+            android:background="#00000000"
+            android:textColor="@color/black"
+            android:textSize="@dimen/size30sp"
+            android:textStyle="bold"
             android:text="Đăng xuất" />
 
     </RelativeLayout>

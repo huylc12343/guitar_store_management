@@ -40,20 +40,20 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/helloText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="GPedal2Hand"
+                android:text="Xin chào Quang Huy"
+                android:textColor="@color/white"
                 android:textSize="@dimen/size30sp"
-                android:textAllCaps="true"
-                android:textStyle="bold"
-                />
+            />
 
             <ImageButton
                 android:id="@+id/notification_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/user_icon"
+                android:src="@drawable/bell_svgrepo_com"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true" />
 

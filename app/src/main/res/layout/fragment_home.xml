@@ -38,6 +38,15 @@
 
                 android:layout_margin="12dp"
                 app:cardElevation="12dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/btnSearch"
+                        android:background="#00000000" />
+                </RelativeLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -47,7 +56,7 @@
                     <ImageView
                         android:layout_width="@dimen/size80dp"
                         android:layout_height="@dimen/size80dp"
-                        android:src="@drawable/user_icon"
+                        android:src="@drawable/search_folder_svgrepo_com"
                         android:layout_gravity="center_horizontal"
 
                         />
@@ -74,6 +83,15 @@
 
                 android:layout_margin="12dp"
                 app:cardElevation="12dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/btnBill"
+                        android:background="#00000000" />
+                </RelativeLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -83,14 +101,14 @@
                     <ImageView
                         android:layout_width="@dimen/size80dp"
                         android:layout_height="@dimen/size80dp"
-                        android:src="@drawable/user_icon"
+                        android:src="@drawable/bill_finance_business_money_financial_banking_cash_svgrepo_com"
                         android:layout_gravity="center_horizontal"
 
                         />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Thanh toán"
+                        android:text="Hóa đơn"
                         android:layout_gravity="center_horizontal"
                         android:textSize="18dp"
                         android:textStyle="bold"
@@ -110,6 +128,15 @@
 
                 android:layout_margin="12dp"
                 app:cardElevation="12dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/btnAddStorage"
+                        android:background="#00000000" />
+                </RelativeLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -119,7 +146,7 @@
                     <ImageView
                         android:layout_width="@dimen/size80dp"
                         android:layout_height="@dimen/size80dp"
-                        android:src="@drawable/user_icon"
+                        android:src="@drawable/database_plus_svgrepo_com"
                         android:layout_gravity="center_horizontal"
 
                         />
@@ -146,6 +173,15 @@
 
                 android:layout_margin="12dp"
                 app:cardElevation="12dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/btnHistory"
+                        android:background="#00000000" />
+                </RelativeLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -155,14 +191,14 @@
                     <ImageView
                         android:layout_width="@dimen/size80dp"
                         android:layout_height="@dimen/size80dp"
-                        android:src="@drawable/user_icon"
+                        android:src="@drawable/history_svgrepo_com"
                         android:layout_gravity="center_horizontal"
 
                         />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Xuất kho"
+                        android:text="Lịch sử"
                         android:layout_gravity="center_horizontal"
                         android:textSize="18dp"
                         android:textStyle="bold"

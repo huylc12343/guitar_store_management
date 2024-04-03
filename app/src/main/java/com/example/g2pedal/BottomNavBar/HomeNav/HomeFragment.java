@@ -4,21 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.g2pedal.BottomNavBar.StorageNav.StorageActivity;
-import com.example.g2pedal.MainActivity;
 import com.example.g2pedal.R;
-import com.example.g2pedal.ui.AddStorageActivity;
-import com.example.g2pedal.ui.BillActivity;
-import com.example.g2pedal.ui.HistoryActivity;
-import com.example.g2pedal.ui.LoginActivity;
-import com.example.g2pedal.ui.SearchActivity;
-
+import com.example.g2pedal.BottomNavBar.HomeNav.HomeFunc.*;
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link HomeFragment#newInstance} factory method to
@@ -77,6 +73,7 @@ public class HomeFragment extends Fragment {
         btnBill = view.findViewById(R.id.btnBill);
         btnAddStorage = view.findViewById(R.id.btnAddStorage);
         btnHistory = view.findViewById(R.id.btnHistory);
+//        btnSearch.setOnClickListener((View.OnClickListener)this);
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,20 +107,27 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         return view;
     }
+
     private void openSearchActivity(){
-        Intent intent = new Intent(getActivity(), SearchActivity.class);
-        startActivity(intent);
+        replaceFragment(new SearchFragment());
     }
     private void openBillActivity(){
-        Intent intent = new Intent(getActivity(), BillActivity.class);
-        startActivity(intent);
+        replaceFragment(new BillFragment());
+
     }
     private void openAddStorageActivity(){
-        Intent intent = new Intent(getActivity(), AddStorageActivity.class);
-        startActivity(intent);
+        replaceFragment(new AddStorageFragment());
+
     }
     private void openHistoryActivity(){
-        Intent intent = new Intent(getActivity(), HistoryActivity.class);
-        startActivity(intent);
+        replaceFragment(new HistoryFragment());
+
+    }
+    private void replaceFragment(Fragment fragment){
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout,fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }

@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,49 +80,54 @@ public class StorageFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_storage, container, false);
 
-        Button guitarLayout = view.findViewById(R.id.btnGuitarCategory);
-        Button amplifierLayout = view.findViewById(R.id.btnAmpCategory);
-        Button pedalLayout = view.findViewById(R.id.btnPedalCategory);
-        Button otherLayout = view.findViewById(R.id.btnOtherCategory);
+        Button guitarFragment = view.findViewById(R.id.btnGuitarCategory);
+        Button amplifierFragment = view.findViewById(R.id.btnAmpCategory);
+        Button pedalFragment = view.findViewById(R.id.btnPedalCategory);
+        Button otherFragment = view.findViewById(R.id.btnOtherCategory);
 
-        guitarLayout.setOnClickListener(new View.OnClickListener() {
+        guitarFragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), StorageActivity.class);
-                intent.putExtra("category", "Guitar");
-                startActivity(intent);
+                replaceFragment(new StorageDataFragment(),"Guitar");
+            }
+        });
+
+        amplifierFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new StorageDataFragment(),"Amplifier");
 
             }
         });
 
-        amplifierLayout.setOnClickListener(new View.OnClickListener() {
+        pedalFragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), StorageActivity.class);
-                intent.putExtra("category", "Amplifier");
-                startActivity(intent);
+                replaceFragment(new StorageDataFragment(),"Pedal");
+
             }
         });
 
-        pedalLayout.setOnClickListener(new View.OnClickListener() {
+        otherFragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), StorageActivity.class);
-                intent.putExtra("category", "Pedal");
-                startActivity(intent);
+                replaceFragment(new StorageDataFragment(),"Other");
+
             }
         });
 
-        otherLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), StorageActivity.class);
-                intent.putExtra("category", "Other");
-                startActivity(intent);
-            }
-        });
-        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_storage, container, false);
         return view;
+    }
+    private void replaceFragment(Fragment fragment,String category){
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("category", category);
+        fragment.setArguments(bundle);
+
+        fragmentTransaction.replace(R.id.frame_layout,fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }

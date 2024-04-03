@@ -12,14 +12,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_view" />
+        app:menu="@menu/bottom_nav_view"
+        android:background="@drawable/bg_view_reverse"
+        />
 
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        >
 
     </FrameLayout>
 
@@ -27,19 +30,24 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:layout_constraintTop_toTopOf="parent" >
+        android:background="@color/red"
+        app:layout_constraintTop_toTopOf="parent"
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center">
 
-            <ImageView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/wallpaper"
-                android:layout_centerInParent="true" />
+                android:layout_centerInParent="true"
+                android:text="GPedal2Hand"
+                android:textSize="@dimen/size30sp"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                />
 
             <ImageButton
                 android:id="@+id/notification_button"

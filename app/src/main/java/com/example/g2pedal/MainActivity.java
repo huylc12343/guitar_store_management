@@ -5,18 +5,24 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
 import com.example.g2pedal.BottomNavBar.HomeNav.HomeFragment;
 import com.example.g2pedal.BottomNavBar.StorageNav.StorageFragment;
 import com.example.g2pedal.BottomNavBar.UserNav.UserFragment;
 import com.example.g2pedal.databinding.ActivityMainBinding;
+import com.example.g2pedal.ui.LoginActivity;
+import com.example.g2pedal.ui.NotificationActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     ActivityMainBinding binding;
+    ImageButton notiBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,14 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        notiBtn = binding.notificationButton;
+        notiBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openNotiActivity();
+            }
+        });
     }
 
     private void replaceFragment(Fragment fragment){
@@ -46,5 +60,9 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,fragment);
         fragmentTransaction.commit();
+    }
+    private void openNotiActivity(){
+        Intent iNoti = new Intent(MainActivity.this, NotificationActivity.class);
+        startActivities(new Intent[]{iNoti});
     }
 }

@@ -1,16 +1,26 @@
 package com.example.g2pedal.BottomNavBar.HomeNav.HomeFunc;
 
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.example.g2pedal.Adapter.BillAdapter;
+import com.example.g2pedal.Model.BillModel;
 import com.example.g2pedal.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +37,8 @@ public class BillFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private RecyclerView rvMyBill;
+
 
     public BillFragment() {
         // Required empty public constructor
@@ -64,6 +76,27 @@ public class BillFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bill, container, false);
 
+        rvMyBill = view.findViewById(R.id.rv_bill);
+        List<BillModel> billModelList = new ArrayList<>();
+        billModelList.add(new BillModel(0,getUri(R.drawable.guitar_1),"Guitar","Fender Statocaster","Fender","Black","1","17.000.000VND"));
+        billModelList.add(new BillModel(1,getUri(R.drawable.guitar_2),"Guitar","Fender Statocaster","Fender","BabyBlue","1","17.000.000VND"));
+        billModelList.add(new BillModel(2,getUri(R.drawable.guitar_3),"Guitar","Fender Statocaster","Fender","Black","1","17.000.000VND"));
+        billModelList.add(new BillModel(3,getUri(R.drawable.guitar_4),"Guitar","Fender Statocaster","Fender","Red","1","17.000.000VND"));
+        billModelList.add(new BillModel(4,getUri(R.drawable.guitar_5),"Guitar","Ibanez Statocaster","Fender","Black","1","17.000.000VND"));
+        billModelList.add(new BillModel(5,getUri(R.drawable.guitar_6),"Guitar","Fender Statocaster","Fender","Pink","1","17.000.000VND"));
+        billModelList.add(new BillModel(6,getUri(R.drawable.pedal_1),"Pedal","BOSS SD1","BOSS","Yellow","1","1.000.000VND"));
+        billModelList.add(new BillModel(7,getUri(R.drawable.pedal_2),"Pedal","Pedal Nobrand","NoBrand","Purple","1","700.000VND"));
+        billModelList.add(new BillModel(8,getUri(R.drawable.amp_1),"Amplifier","Fender Amplifier","Fender","Black","1","2.000.000VND"));
+        billModelList.add(new BillModel(9,getUri(R.drawable.other_1),"Other","SD Pickup Humbucker","Seymour Duncan","Silver","1","2.500.000VND"));
+        billModelList.add(new BillModel(10,getUri(R.drawable.other_2),"Other","2 side bridge","NoBrand","Silver","1","1.000.000VND"));
+
+        BillAdapter billAdapter = new BillAdapter(getContext(), billModelList);
+        rvMyBill.setHasFixedSize(true);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),1, RecyclerView.VERTICAL,false);
+        rvMyBill.addItemDecoration(new DividerItemDecoration(requireContext(),DividerItemDecoration.VERTICAL));
+        rvMyBill.setLayoutManager(layoutManager);
+        rvMyBill.setItemAnimator(new DefaultItemAnimator());
+        rvMyBill.setAdapter(billAdapter);
         ImageButton btnBack = view.findViewById(R.id.btnBillToHome);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,5 +112,8 @@ public class BillFragment extends Fragment {
     private void goBack(){
         FragmentManager fragmentManager = getParentFragmentManager();
         fragmentManager.popBackStack();
+    }
+    public Uri getUri (int resId){
+        return Uri.parse("android.resource://"  + getContext().getPackageName().toString() + "/" + resId);
     }
 }

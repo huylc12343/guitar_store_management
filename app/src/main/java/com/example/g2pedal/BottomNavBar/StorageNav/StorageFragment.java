@@ -1,12 +1,17 @@
 package com.example.g2pedal.BottomNavBar.StorageNav;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +21,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.example.g2pedal.Adapter.BillAdapter;
 import com.example.g2pedal.MainActivity;
+import com.example.g2pedal.Model.BillModel;
 import com.example.g2pedal.R;
 import com.example.g2pedal.ui.LoginActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,6 +46,7 @@ public class StorageFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     ImageView backbtn;
+
 
     public StorageFragment() {
         // Required empty public constructor
@@ -85,6 +96,8 @@ public class StorageFragment extends Fragment {
         Button pedalFragment = view.findViewById(R.id.btnPedalCategory);
         Button otherFragment = view.findViewById(R.id.btnOtherCategory);
 
+
+
         guitarFragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,4 +143,5 @@ public class StorageFragment extends Fragment {
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
+
 }

@@ -36,11 +36,33 @@
                     />
             </RelativeLayout>
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/totalMoneyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:orientation="horizontal"
+            android:padding="@dimen/size10dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="Tổng giá tiền: 100.000.000"/>
+
+            <Button
+                android:id="@+id/btn_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thanh toán"
+                android:layout_marginLeft="20dp"
+                />
+        </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/rv_bill"
             />
+
     </LinearLayout>
 
 </FrameLayout>

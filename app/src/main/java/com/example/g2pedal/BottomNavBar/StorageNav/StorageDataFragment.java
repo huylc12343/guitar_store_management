@@ -1,9 +1,16 @@
 package com.example.g2pedal.BottomNavBar.StorageNav;
 
+
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +18,17 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.g2pedal.Adapter.StorageDataAdapter;
+import com.example.g2pedal.Model.StorageDataModel;
 import com.example.g2pedal.R;
+import com.example.g2pedal.Repository.StorageDataRepository;
+
+import android.content.ContentResolver;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +47,11 @@ public class StorageDataFragment extends Fragment {
     private String mParam2;
 
     private TextView txtCategory;
+
+    private RecyclerView rvStorageData;
+    StorageDataRepository storageDataRepository;
+
+
     public StorageDataFragment() {
         // Required empty public constructor
     }
@@ -65,17 +87,38 @@ public class StorageDataFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        String category = getArguments().getString("category");
         View view = inflater.inflate(R.layout.fragment_storage_data, container, false);
         txtCategory = view.findViewById(R.id.tvStorageData);
+        rvStorageData = view.findViewById(R.id.rv_storage_data);
         ImageButton btnBack = view.findViewById(R.id.btnStorageDataToHome);
+
+
+        String category = getArguments().getString("category");
         String storageLabel = "Kho chứa "+ category;
         txtCategory.setText(storageLabel);
+
+        List<StorageDataModel> storageDataModelList = new ArrayList<>();
+//
+//        storageDataModelList.add(new StorageDataModel("0",getUri(R.drawable.guitar_1),"FenderStrattocaster","17.000.000","Còn hàng"));
+//        storageDataModelList.add(new StorageDataModel("1",getUri(R.drawable.guitar_2),"FenderStrattocaster","17.000.000","Hết hàng"));
+//        storageDataModelList.add(new StorageDataModel("2",getUri(R.drawable.guitar_3),"FenderStrattocaster","17.000.000","Còn hàng"));
+//        storageDataModelList.add(new StorageDataModel("3",getUri(R.drawable.guitar_4),"FenderStrattocaster","17.000.000","Còn hàng"));
+
+        initData(category);
+        StorageDataAdapter storageDataAdapter = new StorageDataAdapter(getContext(),this.storageDataRepository.getStorageDataModelList());
+        rvStorageData.setHasFixedSize(true);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),2, RecyclerView.VERTICAL,false);
+        rvStorageData.addItemDecoration(new DividerItemDecoration(requireContext(),DividerItemDecoration.HORIZONTAL));
+        rvStorageData.setLayoutManager(layoutManager);
+        rvStorageData.setItemAnimator(new DefaultItemAnimator());
+        rvStorageData.setAdapter(storageDataAdapter);
+
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Quay lại HomeFragment
                 goBack();
+                storageDataRepository.delDB();
             }
         });
 
@@ -85,4 +128,59 @@ public class StorageDataFragment extends Fragment {
         FragmentManager fragmentManager = getParentFragmentManager();
         fragmentManager.popBackStack();
     }
+    public Uri getUri (int resId){
+        return Uri.parse("android.resource://"  + getContext().getPackageName().toString() + "/" + resId);
+    }
+    private void initData(String category){
+        ArrayList<StorageDataModel> alProduct = new ArrayList<>();
+
+        for (int i = 0; i < 100; i++) {
+            String id = Integer.toString(i);
+            StorageDataModel p = new StorageDataModel(id, category+"_" + i,"","");
+            int resID = getResId(category.toLowerCase() +"_"+ i, R.drawable.class);
+            Uri imgUri = getUri(resID);
+            p.setDataIMG(imgUri);
+            float price = Float.parseFloat(String.format("%.2f",new Random().nextFloat() * 10000));
+            String strPrice = Float.toString(price);
+            p.setPrice(strPrice);
+
+            if(i%3!=1){
+                p.setStatus("Còn hàng");
+            }else{
+                p.setStatus("Hết hàng");
+            }
+            if(imageIsNull( p.getDataIMG())){
+                alProduct.add(p);
+            }
+        }
+        this.storageDataRepository = new StorageDataRepository(alProduct);
+
+    }
+    public static int getResId(String resName, Class<?> c) {
+
+        try {
+            Field idField = c.getDeclaredField(resName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+    private boolean imageIsNull(Uri imgUri) {
+        try{
+        ContentResolver contentResolver = requireContext().getContentResolver();
+        InputStream inputStream = contentResolver.openInputStream(imgUri);
+        Drawable drawable = Drawable.createFromStream(inputStream, imgUri.toString());
+
+        // Nếu drawable không null, tức là imageUri đại diện cho một hình ảnh hợp lệ
+        if (drawable != null) {
+            return true;
+        }
+        }
+         catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

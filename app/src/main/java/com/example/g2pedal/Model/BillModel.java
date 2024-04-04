@@ -3,7 +3,7 @@ package com.example.g2pedal.Model;
 import android.net.Uri;
 
 public class BillModel {
-    int id;
+    String id;
     private Uri productIMG;
     private String category;
     private String tittle;
@@ -12,7 +12,8 @@ public class BillModel {
     private String quantity;
     private String price;
 
-    public BillModel(int id, Uri productIMG, String category, String tittle, String brand, String color, String quantity, String price) {
+
+    public BillModel(String id, Uri productIMG, String category, String tittle, String brand, String color, String quantity, String price) {
         this.id = id;
         this.productIMG = productIMG;
         this.category = category;
@@ -23,11 +24,11 @@ public class BillModel {
         this.price = price;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

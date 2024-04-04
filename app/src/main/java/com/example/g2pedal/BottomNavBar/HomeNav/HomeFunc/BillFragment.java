@@ -78,17 +78,17 @@ public class BillFragment extends Fragment {
 
         rvMyBill = view.findViewById(R.id.rv_bill);
         List<BillModel> billModelList = new ArrayList<>();
-        billModelList.add(new BillModel(0,getUri(R.drawable.guitar_1),"Guitar","Fender Statocaster","Fender","Black","1","17.000.000VND"));
-        billModelList.add(new BillModel(1,getUri(R.drawable.guitar_2),"Guitar","Fender Statocaster","Fender","BabyBlue","1","17.000.000VND"));
-        billModelList.add(new BillModel(2,getUri(R.drawable.guitar_3),"Guitar","Fender Statocaster","Fender","Black","1","17.000.000VND"));
-        billModelList.add(new BillModel(3,getUri(R.drawable.guitar_4),"Guitar","Fender Statocaster","Fender","Red","1","17.000.000VND"));
-        billModelList.add(new BillModel(4,getUri(R.drawable.guitar_5),"Guitar","Ibanez Statocaster","Fender","Black","1","17.000.000VND"));
-        billModelList.add(new BillModel(5,getUri(R.drawable.guitar_6),"Guitar","Fender Statocaster","Fender","Pink","1","17.000.000VND"));
-        billModelList.add(new BillModel(6,getUri(R.drawable.pedal_1),"Pedal","BOSS SD1","BOSS","Yellow","1","1.000.000VND"));
-        billModelList.add(new BillModel(7,getUri(R.drawable.pedal_2),"Pedal","Pedal Nobrand","NoBrand","Purple","1","700.000VND"));
-        billModelList.add(new BillModel(8,getUri(R.drawable.amp_1),"Amplifier","Fender Amplifier","Fender","Black","1","2.000.000VND"));
-        billModelList.add(new BillModel(9,getUri(R.drawable.other_1),"Other","SD Pickup Humbucker","Seymour Duncan","Silver","1","2.500.000VND"));
-        billModelList.add(new BillModel(10,getUri(R.drawable.other_2),"Other","2 side bridge","NoBrand","Silver","1","1.000.000VND"));
+        billModelList.add(new BillModel("0",getUri(R.drawable.guitar_1),"Guitar","Fender Statocaster","Fender","Black","1","17.000.000VND"));
+        billModelList.add(new BillModel("1",getUri(R.drawable.guitar_2),"Guitar","Fender Statocaster","Fender","BabyBlue","1","17.000.000VND"));
+        billModelList.add(new BillModel("2",getUri(R.drawable.guitar_3),"Guitar","Fender Statocaster","Fender","Black","1","17.000.000VND"));
+        billModelList.add(new BillModel("3",getUri(R.drawable.guitar_4),"Guitar","Fender Statocaster","Fender","Red","1","17.000.000VND"));
+        billModelList.add(new BillModel("4",getUri(R.drawable.guitar_5),"Guitar","Ibanez Statocaster","Fender","Black","1","17.000.000VND"));
+        billModelList.add(new BillModel("5",getUri(R.drawable.guitar_6),"Guitar","Fender Statocaster","Fender","Pink","1","17.000.000VND"));
+        billModelList.add(new BillModel("6",getUri(R.drawable.pedal_1),"Pedal","BOSS SD1","BOSS","Yellow","1","1.000.000VND"));
+        billModelList.add(new BillModel("7",getUri(R.drawable.pedal_2),"Pedal","Pedal Nobrand","NoBrand","Purple","1","700.000VND"));
+        billModelList.add(new BillModel("8",getUri(R.drawable.amplifier_1),"Amplifier","Fender Amplifier","Fender","Black","1","2.000.000VND"));
+        billModelList.add(new BillModel("9",getUri(R.drawable.other_1),"Other","SD Pickup Humbucker","Seymour Duncan","Silver","1","2.500.000VND"));
+        billModelList.add(new BillModel("10",getUri(R.drawable.other_2),"Other","2 side bridge","NoBrand","Silver","1","1.000.000VND"));
 
         BillAdapter billAdapter = new BillAdapter(getContext(), billModelList);
         rvMyBill.setHasFixedSize(true);
@@ -97,6 +97,7 @@ public class BillFragment extends Fragment {
         rvMyBill.setLayoutManager(layoutManager);
         rvMyBill.setItemAnimator(new DefaultItemAnimator());
         rvMyBill.setAdapter(billAdapter);
+
         ImageButton btnBack = view.findViewById(R.id.btnBillToHome);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override

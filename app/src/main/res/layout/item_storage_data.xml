@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="3dp"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="15dp"
+
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/size10dp"
+        >
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_storageDataIMG"
+                android:layout_width="@dimen/size150dp"
+                android:layout_height="@dimen/size150dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/size10dp"
+                android:src="@drawable/guitar_1" />
+            <TextView
+                android:id="@+id/txt_storageDataTittle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/iv_storageDataIMG"
+                android:text="FenderStratocaster"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/txt_storageDataPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_storageDataTittle"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:drawablePadding="2dp"
+                android:text="17.000.000VND"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                app:drawableStartCompat="@drawable/money_svgrepo_com" />
+
+        </LinearLayout>
+        <TextView
+            android:id="@+id/txt_storageDataId"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@id/linearLayout"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:drawablePadding="2dp"
+            android:text="ID: abcd"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_below="@id/txt_storageDataId"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/txt_storageDataStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:text="Còn hàng"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:background="@drawable/bg_status_aval"
+                android:gravity="center"
+                />
+            <ImageView
+                android:id="@+id/iv_Add"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="@dimen/size10dp"
+                android:layout_marginTop="@dimen/size10dp"
+                android:layout_marginEnd="@dimen/size10dp"
+                android:layout_marginBottom="@dimen/size10dp"
+                android:src="@drawable/add_button_svgrepo_com"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_alignParentRight="true"
+                />
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

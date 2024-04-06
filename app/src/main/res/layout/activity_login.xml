@@ -32,7 +32,7 @@
       android:layout_centerVertical="true"
       >
     <EditText
-        android:id="@+id/edTenDangNhapDN"
+        android:id="@+id/lgUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/tendangnhap"
@@ -47,7 +47,7 @@
         android:singleLine="true"
         />
     <EditText
-        android:id="@+id/edMatKhauDN"
+        android:id="@+id/lgPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/matkhau"
@@ -64,7 +64,7 @@
         tools:ignore="Deprecated"
         />
     <Button
-        android:id="@+id/btnDangNhapDN"
+        android:id="@+id/btnLoginlg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/dangnhap"
@@ -87,7 +87,7 @@
               android:layout_marginEnd="4dp"/> <!-- Thêm khoảng cách giữa hai TextView -->
 
           <TextView
-              android:id="@+id/dangky"
+              android:id="@+id/btnRegislg"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="Đăng ký"

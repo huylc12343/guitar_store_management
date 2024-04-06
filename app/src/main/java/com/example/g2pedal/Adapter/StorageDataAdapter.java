@@ -41,14 +41,13 @@ public class StorageDataAdapter extends RecyclerView.Adapter<StorageDataAdapter.
         holder.storageDataId.setText("ID: "+storageDataModel.getId());
         holder.storageDataStatus.setText(""+storageDataModel.getStatus());
 
-
-
         if(storageDataModel.getStatus().equals("Hết hàng")){
             holder.storageDataStatus.setBackgroundResource(R.drawable.bg_status_sold);
         }else{
             holder.storageDataStatus.setBackgroundResource(R.drawable.bg_status_aval);
 
         }
+
     }
 
     @Override

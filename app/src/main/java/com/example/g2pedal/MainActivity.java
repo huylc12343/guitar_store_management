@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.example.g2pedal.BottomNavBar.HomeNav.HomeFragment;
 import com.example.g2pedal.BottomNavBar.StorageNav.StorageFragment;
 import com.example.g2pedal.BottomNavBar.UserNav.UserFragment;
+import com.example.g2pedal.DAO.UserDAO;
+import com.example.g2pedal.DTO.UserDTO;
 import com.example.g2pedal.databinding.ActivityMainBinding;
 import com.example.g2pedal.ui.NotificationActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -31,10 +33,31 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         replaceFragment(new HomeFragment());
-        String greetingText = "Xin chào "+"getName()";
-        txtGreeting = (TextView)findViewById(R.id.helloText);
-        txtGreeting.setText(greetingText);
+
         bottomNavigationView = binding.bottomNavigationView;
+
+        UserDAO userDAO = new UserDAO();
+        Intent intent = getIntent();
+        String phone = intent.getStringExtra("phone");
+        userDAO.getUserData(phone, new UserDAO.OnUserDataLoadedListener()  {
+
+            @Override
+            public void onUserDataLoaded(UserDTO user) {
+                String greetingText = "Xin chào "+user.getFullName();
+                txtGreeting = (TextView)findViewById(R.id.helloText);
+                txtGreeting.setText(greetingText);
+            }
+
+            @Override
+            public void onUserNotFound() {
+                // Người dùng không tồn tại trong cơ sở dữ liệu
+            }
+
+            @Override
+            public void onDataLoadFailed(String errorMessage) {
+                // Xử lý khi có lỗi xảy ra trong quá trình tải dữ liệu
+            }
+        });
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
@@ -44,7 +67,13 @@ public class MainActivity extends AppCompatActivity {
                 } else if (id == R.id.storageNav) {
                     replaceFragment(new StorageFragment());
                 } else if (id == R.id.userNav) {
-                    replaceFragment(new UserFragment());
+                    Intent intent = getIntent();
+                    String toFragPhone = intent.getStringExtra("phone");
+                    UserFragment fragment = new UserFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("phone", toFragPhone);
+                    fragment.setArguments(bundle);
+                    replaceFragment(fragment);
                 }
                 return true;
             }

@@ -2,10 +2,12 @@ package com.example.g2pedal.FirebaseHelper;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.g2pedal.BottomNavBar.UserNav.UserFragment;
 import com.example.g2pedal.MainActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -13,11 +15,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class FirebaseHelper {
+public class UserFirebaseHelper {
     private DatabaseReference databaseReference;
     private Context context;
 
-    public FirebaseHelper(Context context) {
+    public UserFirebaseHelper(Context context) {
         this.context = context;
         databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://g2pedal-default-rtdb.firebaseio.com/");
     }
@@ -70,8 +72,10 @@ public class FirebaseHelper {
                     Toast.makeText(context, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(context, MainActivity.class);
                     intent.putExtra("phone", phoneNumber);
+
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
+
                 } else {
                     Toast.makeText(context, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
                 }

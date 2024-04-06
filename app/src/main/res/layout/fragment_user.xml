@@ -27,37 +27,42 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="User"
+                android:id="@+id/txtUs"
                 android:textStyle="bold"
-                android:textSize="@dimen/size30sp"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/gray"
-                android:text="Quang Huy"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:paddingLeft="20dp"
+                android:textSize="@dimen/size30sp"
                 />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/gray"
-                android:text="0961264222"
+                android:text="..."
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="30dp"
-                android:paddingLeft="20dp"
                 android:layout_marginRight="30dp"
+                android:paddingLeft="20dp"
+                android:id="@+id/userFragUserFullname"
                 />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/gray"
-                android:text="huylc12343@gmail.com"
+                android:text="..."
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="30dp"
                 android:paddingLeft="20dp"
                 android:layout_marginRight="30dp"
+                android:id="@+id/userFragPhone"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray"
+                android:text="..."
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="30dp"
+                android:paddingLeft="20dp"
+                android:layout_marginRight="30dp"
+                android:id="@+id/userFragMail"
                 />
             <ListView
                 android:padding="30dp"

@@ -10,12 +10,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.g2pedal.FirebaseHelper.FirebaseHelper;
-import com.example.g2pedal.MainActivity;
+import com.example.g2pedal.FirebaseHelper.UserFirebaseHelper;
 import com.example.g2pedal.R;
 
 public class LoginActivity extends AppCompatActivity {
-    private FirebaseHelper firebaseHelper;
+    private UserFirebaseHelper userFirebaseHelper;
 
     Button btnLogin;
     TextView tvRegis;
@@ -24,7 +23,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        firebaseHelper = new FirebaseHelper(this);
+        userFirebaseHelper = new UserFirebaseHelper(this);
 
         EditText txtUsername = findViewById(R.id.lgUsername);
         EditText txtPassword = findViewById(R.id.lgPassword);
@@ -39,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (getPhoneTxt.isEmpty() || getPasswordTxt.isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Nhập username hoặc password", Toast.LENGTH_SHORT).show();
                 } else {
-                    firebaseHelper.login(getPhoneTxt,getPasswordTxt);
+                    userFirebaseHelper.login(getPhoneTxt,getPasswordTxt);
                 }
             }
         });

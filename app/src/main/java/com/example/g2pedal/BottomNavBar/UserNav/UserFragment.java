@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.g2pedal.DAO.UserDAO;
+import com.example.g2pedal.DTO.UserDTO;
 import com.example.g2pedal.R;
 
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class UserFragment extends Fragment {
     private UserAdapter adapter;
     private List<String> userList;
     private ImageView avatar ;
+    private TextView fullname,phonetv,mail;
 
     public UserFragment() {
         // Required empty public constructor
@@ -74,15 +77,56 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
+        UserDAO userDAO = new UserDAO();
         View view = inflater.inflate(R.layout.fragment_user, container, false);
         listView = (ListView) view.findViewById(R.id.userNavListview);
         userList = createUserList();
+
+        String queryPhone = getArguments().getString("phone");
+
+        Bundle args = getArguments();
+
+        // Kiểm tra xem Bundle có tồn tại và chứa khóa "myStringKey" không
+        if (args != null && args.containsKey("phone")) {
+            queryPhone = args.getString("phone");
+
+            // Sử dụng giá trị chuỗi ở đây để thực hiện các xử lý khác
+            // ...
+        }else{
+            Toast.makeText(getContext(), "Lỗi rồi", Toast.LENGTH_SHORT).show();
+        }
+        fullname = (TextView)view.findViewById(R.id.userFragUserFullname);
+        mail = (TextView)view.findViewById(R.id.userFragMail);
+        phonetv = (TextView)view.findViewById(R.id.userFragPhone);
 
         adapter = new UserAdapter(requireContext(), userList);
 
         listView.setAdapter(adapter);
         avatar = (ImageView) view.findViewById(R.id.userAvatarFunc);
+
+        userDAO.getUserData(queryPhone, new UserDAO.OnUserDataLoadedListener()  {
+
+            @Override
+            public void onUserDataLoaded(UserDTO user) {
+                fullname.setText(user.getFullName());
+                mail.setText(user.getEmail());
+                phonetv.setText(user.getPhone());
+            }
+
+            @Override
+            public void onUserNotFound() {
+                // Người dùng không tồn tại trong cơ sở dữ liệu
+            }
+
+            @Override
+            public void onDataLoadFailed(String errorMessage) {
+                // Xử lý khi có lỗi xảy ra trong quá trình tải dữ liệu
+            }
+        });
+        // Inflate the layout for this fragment
+
+
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

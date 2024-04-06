@@ -9,11 +9,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.g2pedal.FirebaseHelper.FirebaseHelper;
+import com.example.g2pedal.FirebaseHelper.UserFirebaseHelper;
 import com.example.g2pedal.R;
 
 public class RegisActivity extends AppCompatActivity {
-    private FirebaseHelper firebaseHelper;
+    private UserFirebaseHelper userFirebaseHelper;
 
 
     @Override
@@ -21,7 +21,7 @@ public class RegisActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_regis);
 
-        firebaseHelper = new FirebaseHelper(this);
+        userFirebaseHelper = new UserFirebaseHelper(this);
 
         EditText fullName = findViewById(R.id.rgFullname);
         EditText phone = findViewById(R.id.rgPhone);
@@ -42,7 +42,7 @@ public class RegisActivity extends AppCompatActivity {
                         || getPasswordForm.isEmpty()) {
                     Toast.makeText(RegisActivity.this, "Hãy điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
                 } else {
-                    firebaseHelper.checkExistingUser(getFullNameForm,getMailForm,getPhoneForm, getPasswordForm);
+                    userFirebaseHelper.checkExistingUser(getFullNameForm,getMailForm,getPhoneForm, getPasswordForm);
                 }
             }
         });

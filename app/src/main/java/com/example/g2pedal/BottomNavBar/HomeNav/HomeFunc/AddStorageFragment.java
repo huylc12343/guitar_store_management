@@ -1,16 +1,25 @@
 package com.example.g2pedal.BottomNavBar.HomeNav.HomeFunc;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.example.g2pedal.R;
+
+import java.io.IOException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,7 +36,11 @@ public class AddStorageFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private Uri imgUri;
+    private Bitmap bitmap;
 
+    ImageView productIMG;
     public AddStorageFragment() {
         // Required empty public constructor
     }
@@ -64,6 +77,15 @@ public class AddStorageFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_storage, container, false);
 
+        productIMG = view.findViewById(R.id.productIMG);
+
+        productIMG.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImageFromGallery();
+            }
+        });
+
         ImageButton btnBack = view.findViewById(R.id.btnAddStorageToHome);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,5 +99,23 @@ public class AddStorageFragment extends Fragment {
     private void goBack(){
         FragmentManager fragmentManager = getParentFragmentManager();
         fragmentManager.popBackStack();
+    }
+    private void chooseImageFromGallery() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+            imgUri = data.getData();
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imgUri);
+                productIMG.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

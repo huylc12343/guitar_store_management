@@ -4,25 +4,86 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".BottomNavBar.HomeNav.HomeFunc.AddStorageFragment">
-
-    <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical">
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <ImageButton
-            android:id="@+id/btnAddStorageToHome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/go_back_arrow_svgrepo_com"
-            android:background="?android:attr/selectableItemBackground"
-
-            />
-        <TextView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="AddStorageFragment" />
+            android:layout_height="?actionBarSize">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Thêm sản phẩm"
+                android:gravity="center"/>
+
+            <ImageButton
+                android:id="@+id/btnAddStorageToHome"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/go_back_arrow_svgrepo_com"
+                android:padding="15dp"
+                android:layout_centerVertical="true"
+                android:background="?android:attr/selectableItemBackground"
+                />
+        </RelativeLayout>
+
 
     </LinearLayout>
+    <ImageView
+        android:id="@+id/productIMG"
+        android:layout_width= "100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/guitar_1"
+        />
+    <EditText
+        android:id="@+id/productNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:hint="Product Name" />
+        <EditText
+            android:id="@+id/productPriceEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Price" />
+        <EditText
+            android:id="@+id/productColorEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="color" />
+        <EditText
+            android:id="@+id/productCategoryEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="category" />
+
+        <EditText
+            android:id="@+id/productQtyEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Số lượng" />
+        <EditText
+            android:id="@+id/productBrandEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Brand " />
+<!--        <include layout="@layout/combo_box_layout" />-->
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnAddNewProduct"
+            android:text="add product"
+            />
+
+    </LinearLayout>
+
 
 </FrameLayout>

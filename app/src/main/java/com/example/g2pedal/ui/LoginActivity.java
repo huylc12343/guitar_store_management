@@ -11,19 +11,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.g2pedal.FirebaseHelper.UserFirebaseHelper;
+import com.example.g2pedal.MainActivity;
 import com.example.g2pedal.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
-    private UserFirebaseHelper userFirebaseHelper;
 
     Button btnLogin;
     TextView tvRegis;
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference databaseReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        userFirebaseHelper = new UserFirebaseHelper(this);
+        databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://g2pedal-default-rtdb.firebaseio.com/");
+        firebaseAuth = FirebaseAuth.getInstance();
+
 
         EditText txtUsername = findViewById(R.id.lgUsername);
         EditText txtPassword = findViewById(R.id.lgPassword);
@@ -32,13 +40,13 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String getPhoneTxt = txtUsername.getText().toString();
+                String getMailTxt = txtUsername.getText().toString();
                 String getPasswordTxt = txtPassword.getText().toString();
 
-                if (getPhoneTxt.isEmpty() || getPasswordTxt.isEmpty()) {
+                if (getMailTxt.isEmpty() || getPasswordTxt.isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Nhập username hoặc password", Toast.LENGTH_SHORT).show();
                 } else {
-                    userFirebaseHelper.login(getPhoneTxt,getPasswordTxt);
+                    login(getMailTxt,getPasswordTxt);
                 }
             }
         });
@@ -49,5 +57,26 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+    private void login(String email, String password){
+        if (firebaseAuth != null) {
+            firebaseAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            if (user != null) {
+                                String uid = user.getUid(); // Lấy UID của người dùng
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.putExtra("uid", uid); // Truyền UID qua Intent
+                                startActivity(intent);
+                            }
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            Toast.makeText(LoginActivity.this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
+        }
     }
 }

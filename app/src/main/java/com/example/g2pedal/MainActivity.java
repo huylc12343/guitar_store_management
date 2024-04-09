@@ -38,12 +38,12 @@ public class MainActivity extends AppCompatActivity {
 
         UserDAO userDAO = new UserDAO();
         Intent intent = getIntent();
-        String phone = intent.getStringExtra("phone");
-        userDAO.getUserData(phone, new UserDAO.OnUserDataLoadedListener()  {
+        String uid = intent.getStringExtra("uid");
+        userDAO.getUserData(uid, new UserDAO.OnUserDataLoadedListener()  {
 
             @Override
             public void onUserDataLoaded(UserDTO user) {
-                String greetingText = "Xin chào "+user.getFullName();
+                String greetingText = "Xin chào " + user.getFullName();
                 txtGreeting = (TextView)findViewById(R.id.helloText);
                 txtGreeting.setText(greetingText);
             }
@@ -68,10 +68,10 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(new StorageFragment());
                 } else if (id == R.id.userNav) {
                     Intent intent = getIntent();
-                    String toFragPhone = intent.getStringExtra("phone");
+                    String toFragPhone = intent.getStringExtra("uid");
                     UserFragment fragment = new UserFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("phone", toFragPhone);
+                    bundle.putString("uid", toFragPhone);
                     fragment.setArguments(bundle);
                     replaceFragment(fragment);
                 }

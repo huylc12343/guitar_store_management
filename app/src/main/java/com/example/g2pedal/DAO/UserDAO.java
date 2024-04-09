@@ -15,19 +15,19 @@ public class UserDAO {
         databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
     }
 
-    public void getUserData(String phone, final OnUserDataLoadedListener listener) {
-        DatabaseReference userRef = databaseReference.child(phone);
+    public void getUserData(String uid, final OnUserDataLoadedListener listener) {
+        DatabaseReference userRef = databaseReference.child(uid);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     // Lấy dữ liệu từ snapshot và tạo đối tượng UserDTO
-                    String fullName = snapshot.child("fullname").getValue(String.class);
-                    String email = snapshot.child("mail").getValue(String.class);
-                    String password = snapshot.child("password").getValue(String.class);
-
+                    String fullName = snapshot.child("FullName").getValue(String.class);
+                    String email = snapshot.child("Mail").getValue(String.class);
+                    String password = snapshot.child("Password").getValue(String.class);
+                    String phone = snapshot.child("Phone").getValue(String.class);
                     UserDTO user = new UserDTO(fullName, email, phone, password);
-
+                    user.setUid(uid);
                     listener.onUserDataLoaded(user);
                 } else {
                     // Người dùng không tồn tại trong cơ sở dữ liệu

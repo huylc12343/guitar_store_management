@@ -83,13 +83,13 @@ public class UserFragment extends Fragment {
         listView = (ListView) view.findViewById(R.id.userNavListview);
         userList = createUserList();
 
-        String queryPhone = getArguments().getString("phone");
+        String uid = getArguments().getString("uid");
 
         Bundle args = getArguments();
 
         // Kiểm tra xem Bundle có tồn tại và chứa khóa "myStringKey" không
-        if (args != null && args.containsKey("phone")) {
-            queryPhone = args.getString("phone");
+        if (args != null && args.containsKey("uid")) {
+            uid = args.getString("uid");
 
             // Sử dụng giá trị chuỗi ở đây để thực hiện các xử lý khác
             // ...
@@ -105,12 +105,12 @@ public class UserFragment extends Fragment {
         listView.setAdapter(adapter);
         avatar = (ImageView) view.findViewById(R.id.userAvatarFunc);
 
-        userDAO.getUserData(queryPhone, new UserDAO.OnUserDataLoadedListener()  {
+        userDAO.getUserData(uid, new UserDAO.OnUserDataLoadedListener()  {
 
             @Override
             public void onUserDataLoaded(UserDTO user) {
                 fullname.setText(user.getFullName());
-                mail.setText(user.getEmail());
+                mail.setText(user.getMail());
                 phonetv.setText(user.getPhone());
             }
 
@@ -126,14 +126,6 @@ public class UserFragment extends Fragment {
         });
         // Inflate the layout for this fragment
 
-
-        avatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-//                showPopupMenu(v);
-            }
-        });
 //        listView = view.findViewById(R.id.userListView);
 //        adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, userList);
 //        listView.setAdapter(adapter);
@@ -149,39 +141,6 @@ public class UserFragment extends Fragment {
         return userList;
     }
 
-    private void showPopupMenu(View view) {
-        PopupMenu popupMenu = new PopupMenu(getContext(), view);
-        popupMenu.inflate(R.menu.popup_menu); // R.menu.popup_menu là tệp menu bạn đã tạo
-
-        // Xử lý sự kiện khi một mục được chọn
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                // Xử lý các hành động tương ứng với từng mục được chọn
-                int id = item.getItemId();
-                if (id == R.id.selectIMG) {
-                    openIMGPicker();
-                } else if (id == R.id.shootIMG) {
-                    takeIMGfunc();
-                } else if (id == R.id.watchIMG) {
-                    watchIMGfunc();
-                }
-                return true;
-            }
-        });
-
-        // Hiển thị PopupMenu
-        popupMenu.show();
-    }
-    private void openIMGPicker(){
-        Toast.makeText(getContext(), "OpenGalery", Toast.LENGTH_SHORT);
-    }
-    private void takeIMGfunc(){
-        Toast.makeText(getContext(),"Take IMG func",Toast.LENGTH_SHORT);
-    }
-    private void watchIMGfunc(){
-        Toast.makeText(getContext(),"watchIMG",Toast.LENGTH_SHORT);
-    }
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
 //        super.onActivityResult(requestCode,resultCode,data);

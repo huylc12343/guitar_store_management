@@ -2,24 +2,54 @@ package com.example.g2pedal.BottomNavBar.HomeNav.HomeFunc;
 
 import static android.app.Activity.RESULT_OK;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.example.g2pedal.DTO.ProductDTO;
 import com.example.g2pedal.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,6 +69,13 @@ public class AddStorageFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri imgUri;
     private Bitmap bitmap;
+    private Uri pathUri;
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    private Button btnAdd;
+    private EditText productNameEditText,productPriceEditText,productColorEditText,
+            productCategoryEditText,productQtyEditText,productBrandEditText;
 
     ImageView productIMG;
     public AddStorageFragment() {
@@ -78,11 +115,24 @@ public class AddStorageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_storage, container, false);
 
         productIMG = view.findViewById(R.id.productIMG);
+        productNameEditText = view.findViewById(R.id.productNameEditText);
+        productPriceEditText = view.findViewById(R.id.productPriceEditText);
+        productColorEditText = view.findViewById(R.id.productColorEditText);
+        productCategoryEditText = view.findViewById(R.id.productCategoryEditText);
+        productQtyEditText = view.findViewById(R.id.productQtyEditText);
+        productBrandEditText = view.findViewById(R.id.productBrandEditText);
 
+        btnAdd = view.findViewById(R.id.btnAddNewProduct);
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadImage();
+            }
+        });
         productIMG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseImageFromGallery();
+                openImagePicker();
             }
         });
 
@@ -100,22 +150,85 @@ public class AddStorageFragment extends Fragment {
         FragmentManager fragmentManager = getParentFragmentManager();
         fragmentManager.popBackStack();
     }
-    private void chooseImageFromGallery() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-    }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            imgUri = data.getData();
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imgUri);
-                productIMG.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    private void openImagePicker() {
+        // Kiểm tra quyền truy cập bộ nhớ
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PICK_IMAGE_REQUEST);
+        } else {
+            // Mở thư viện ảnh
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            startActivityForResult(intent, PICK_IMAGE_REQUEST);
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PICK_IMAGE_REQUEST && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            openImagePicker();
+        } else {
+            Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show(); // Sửa thành getActivity()
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            pathUri = data.getData();
+            productIMG.setImageURI(pathUri);
+        }
+    }
+
+    private void uploadImage() {
+        if (pathUri != null) {
+            StorageReference fileRef = storage.getReference().child("images/" + System.currentTimeMillis() + ".png");
+            fileRef.putFile(pathUri).addOnSuccessListener(taskSnapshot -> {
+                fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    String photoUrl = uri.toString();
+                    uploadProduct(photoUrl);
+                });
+            }).addOnFailureListener(e -> Toast.makeText(getContext(), "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        } else {
+            Toast.makeText(getContext(), "No image selected", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private void uploadProduct(String photoUrl) {
+        ProductDTO product = new ProductDTO();
+        product.setName(productNameEditText.getText().toString());
+        product.setBrand(productBrandEditText.getText().toString());
+        product.setCategory(productCategoryEditText.getText().toString());
+        product.setColor(productColorEditText.getText().toString());
+
+        // Định dạng và đặt ngày nhập
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String importDate = sdf.format(new Date());
+        product.setImportDate(importDate);
+
+        String productId = "PROD_" + System.currentTimeMillis();
+        product.setProductId(productId);
+ // Thay đổi theo logic ứng dụng của bạn
+        product.setStatus("In Stock");
+
+        // Chuyển đổi kiểu dữ liệu từ String sang Double và Integer
+        try {
+            double price = Double.parseDouble(productPriceEditText.getText().toString());
+            int quantity = Integer.parseInt(productQtyEditText.getText().toString());
+            product.setPrice(price);
+            product.setQuantity(quantity);
+        } catch (NumberFormatException e) {
+            Toast.makeText(getContext(), "Error in number format", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        product.setImageUrl(photoUrl);
+
+        db.collection("products").add(product)
+                .addOnSuccessListener(documentReference -> Toast.makeText(getContext(), "Product added successfully", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Error adding product: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
 }

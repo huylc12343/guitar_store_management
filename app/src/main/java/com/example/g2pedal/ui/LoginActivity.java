@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.g2pedal.FirebaseHelper.UserFirebaseHelper;
 import com.example.g2pedal.MainActivity;
 import com.example.g2pedal.R;
 import com.google.firebase.auth.FirebaseAuth;

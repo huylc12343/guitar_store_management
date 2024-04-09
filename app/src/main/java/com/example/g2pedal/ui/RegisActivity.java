@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.g2pedal.DTO.UserDTO;
-import com.example.g2pedal.FirebaseHelper.UserFirebaseHelper;
 import com.example.g2pedal.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

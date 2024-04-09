@@ -1,10 +1,15 @@
 package com.example.g2pedal.BottomNavBar.StorageNav;
 
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -19,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.g2pedal.Adapter.StorageDataAdapter;
+import com.example.g2pedal.DatabaseHelper.GalleryHelper;
 import com.example.g2pedal.Model.StorageDataModel;
 import com.example.g2pedal.R;
 import com.example.g2pedal.Repository.StorageDataRepository;
@@ -51,6 +57,7 @@ public class StorageDataFragment extends Fragment {
     private RecyclerView rvStorageData;
     StorageDataRepository storageDataRepository;
 
+    private static final int REQUEST_PERMISSION = 1;
 
     public StorageDataFragment() {
         // Required empty public constructor
@@ -87,6 +94,9 @@ public class StorageDataFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
+
         View view = inflater.inflate(R.layout.fragment_storage_data, container, false);
         txtCategory = view.findViewById(R.id.tvStorageData);
         rvStorageData = view.findViewById(R.id.rv_storage_data);
@@ -98,13 +108,19 @@ public class StorageDataFragment extends Fragment {
         txtCategory.setText(storageLabel);
 
         List<StorageDataModel> storageDataModelList = new ArrayList<>();
-//
-//        storageDataModelList.add(new StorageDataModel("0",getUri(R.drawable.guitar_1),"FenderStrattocaster","17.000.000","Còn hàng"));
-//        storageDataModelList.add(new StorageDataModel("1",getUri(R.drawable.guitar_2),"FenderStrattocaster","17.000.000","Hết hàng"));
-//        storageDataModelList.add(new StorageDataModel("2",getUri(R.drawable.guitar_3),"FenderStrattocaster","17.000.000","Còn hàng"));
-//        storageDataModelList.add(new StorageDataModel("3",getUri(R.drawable.guitar_4),"FenderStrattocaster","17.000.000","Còn hàng"));
 
-        initData(category);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
+            } else {
+                initData(category);
+
+            }
+        } else {
+            initData(category);
+
+        }
+
         StorageDataAdapter storageDataAdapter = new StorageDataAdapter(getContext(),this.storageDataRepository.getStorageDataModelList());
         rvStorageData.setHasFixedSize(true);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(),2, RecyclerView.VERTICAL,false);
@@ -133,23 +149,22 @@ public class StorageDataFragment extends Fragment {
     }
     private void initData(String category){
         ArrayList<StorageDataModel> alProduct = new ArrayList<>();
+        List<Uri> imageUris = GalleryHelper.getAllImages(requireContext(),category);
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < imageUris.size(); i++) {
             String id = Integer.toString(i);
-            StorageDataModel p = new StorageDataModel(id, category+"_" + i,"","");
-            int resID = getResId(category.toLowerCase() +"_"+ i, R.drawable.class);
-            Uri imgUri = getUri(resID);
-            p.setDataIMG(imgUri);
-            float price = Float.parseFloat(String.format("%.2f",new Random().nextFloat() * 10000));
+            StorageDataModel p = new StorageDataModel(id, category + "_" + i, "", "");
+            p.setDataIMG(imageUris.get(i));
+            float price = Float.parseFloat(String.format("%.2f", new Random().nextFloat() * 10000));
             String strPrice = Float.toString(price);
             p.setPrice(strPrice);
 
-            if(i%3!=1){
+            if (i % 3 != 1) {
                 p.setStatus("Còn hàng");
-            }else{
+            } else {
                 p.setStatus("Hết hàng");
             }
-            if(imageIsNull( p.getDataIMG())){
+            if (imageIsNull(p.getDataIMG())) {
                 alProduct.add(p);
             }
         }

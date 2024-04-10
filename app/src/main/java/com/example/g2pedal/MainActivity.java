@@ -80,12 +80,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         notiBtn = binding.notificationButton;
-        notiBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openNotiActivity();
-            }
-        });
+        notiBtn.setOnClickListener(v->openNotiActivity());
     }
 
     private void replaceFragment(Fragment fragment){

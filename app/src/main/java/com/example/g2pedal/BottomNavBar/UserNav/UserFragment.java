@@ -6,13 +6,11 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -130,11 +128,7 @@ public class UserFragment extends Fragment {
                 // Xử lý khi có lỗi xảy ra trong quá trình tải dữ liệu
             }
         });
-        // Inflate the layout for this fragment
 
-//        listView = view.findViewById(R.id.userListView);
-//        adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, userList);
-//        listView.setAdapter(adapter);
 
         return view;
 //        return inflater.inflate(R.layout.fragment_user, container, false);
@@ -147,10 +141,4 @@ public class UserFragment extends Fragment {
         return userList;
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
-//        super.onActivityResult(requestCode,resultCode,data);
-//        Uri uri = data.getData();
-//        avatar.setImageURI(uri);
-//    }
 }

@@ -25,9 +25,6 @@ public class StorageDataAdapter extends RecyclerView.Adapter<StorageDataAdapter.
         this.context = context;
         this.storageDataModels = storageDataModels;
     }
-    public List<StorageDataModel> getStorageDataModels() {
-        return storageDataModels;
-    }
 
     @NonNull
     @Override
@@ -38,16 +35,15 @@ public class StorageDataAdapter extends RecyclerView.Adapter<StorageDataAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         StorageDataModel storageDataModel = storageDataModels.get(position);
 
-        // Load hình ảnh từ URL bằng thư viện Picasso
         Picasso.get().load(storageDataModel.getDataIMG()).into(holder.storageDataIMG);
 
         holder.storageDataTittle.setText(storageDataModel.getTittle());
         holder.storageDataPrice.setText(storageDataModel.getPrice() + "VNĐ");
         holder.storageDataId.setText("ID: " + storageDataModel.getId());
         holder.storageDataStatus.setText(storageDataModel.getStatus());
-//        holder.storageDataStatus.setBackgroundResource(R.drawable.bg_status_sold);
 
         if (storageDataModel.getStatus().equals("Sold Out")) {
             holder.storageDataStatus.setBackgroundResource(R.drawable.bg_status_sold);

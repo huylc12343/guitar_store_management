@@ -1,5 +1,6 @@
 package com.example.g2pedal.BottomNavBar.UserNav;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
@@ -17,6 +19,8 @@ import android.widget.Toast;
 import com.example.g2pedal.DAO.UserDAO;
 import com.example.g2pedal.DTO.UserDTO;
 import com.example.g2pedal.R;
+import com.example.g2pedal.ui.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +45,7 @@ public class UserFragment extends Fragment {
     private UserAdapter adapter;
     private List<String> userList;
     private ImageView avatar ;
+    private Button btnLogOut;
     private TextView fullname,phonetv,mail;
 
     public UserFragment() {
@@ -82,20 +87,20 @@ public class UserFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
         listView = (ListView) view.findViewById(R.id.userNavListview);
         userList = createUserList();
-
+        btnLogOut = view.findViewById(R.id.btnLogout);
         String uid = getArguments().getString("uid");
 
         Bundle args = getArguments();
 
-        // Kiểm tra xem Bundle có tồn tại và chứa khóa "myStringKey" không
-        if (args != null && args.containsKey("uid")) {
-            uid = args.getString("uid");
-
-            // Sử dụng giá trị chuỗi ở đây để thực hiện các xử lý khác
-            // ...
-        }else{
-            Toast.makeText(getContext(), "Lỗi rồi", Toast.LENGTH_SHORT).show();
-        }
+//        // Kiểm tra xem Bundle có tồn tại và chứa khóa "myStringKey" không
+//        if (args != null && args.containsKey("uid")) {
+//            uid = args.getString("uid");
+//
+//            // Sử dụng giá trị chuỗi ở đây để thực hiện các xử lý khác
+//            // ...
+//        }else{
+//            Toast.makeText(getContext(), "Lỗi rồi", Toast.LENGTH_SHORT).show();
+//        }
         fullname = (TextView)view.findViewById(R.id.userFragUserFullname);
         mail = (TextView)view.findViewById(R.id.userFragMail);
         phonetv = (TextView)view.findViewById(R.id.userFragPhone);
@@ -104,6 +109,17 @@ public class UserFragment extends Fragment {
 
         listView.setAdapter(adapter);
         avatar = (ImageView) view.findViewById(R.id.userAvatarFunc);
+        btnLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut(); // Sign out the current user
+                Toast.makeText(getContext(), "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
+                if (getActivity() != null) {
+                    getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
+                    getActivity().finish();
+                }
+            }
+        });
 
         userDAO.getUserData(uid, new UserDAO.OnUserDataLoadedListener()  {
 

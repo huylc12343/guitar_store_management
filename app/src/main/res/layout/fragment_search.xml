@@ -6,16 +6,22 @@
     tools:context=".BottomNavBar.HomeNav.HomeFunc.SearchFragment">
 
     <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize">
 
         <EditText
+            android:id="@+id/txtSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="Tìm kiếm"
             android:gravity="center"/>
         <ImageButton
+            android:id="@+id/btnSearchProduct"
             android:src="@drawable/search_svgrepo_com"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -34,5 +40,16 @@
             android:background="?android:attr/selectableItemBackground"
             />
     </RelativeLayout>
-
+    <ProgressBar
+        android:id="@+id/progressBarSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:padding="@dimen/size10dp"
+        android:id="@+id/rv_search_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    </LinearLayout>
 </FrameLayout>

@@ -3,7 +3,9 @@ package com.example.g2pedal.BottomNavBar.HomeNav.HomeFunc;
 import static android.app.Activity.RESULT_OK;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -27,11 +29,14 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.g2pedal.DTO.ProductDTO;
@@ -79,8 +84,11 @@ public class AddStorageFragment extends Fragment {
     private Button btnAdd;
     private ProgressBar progressBar;
     private EditText productNameEditText,productPriceEditText,productColorEditText,
-            productCategoryEditText,productQtyEditText,productBrandEditText;
+            productQtyEditText,productBrandEditText;
+    private Spinner productCategoryEditText ;
 
+    private List<String> categoryList;
+    private ArrayAdapter<String> categoryAdapter;
     ImageView productIMG;
     public AddStorageFragment() {
         // Required empty public constructor
@@ -123,6 +131,19 @@ public class AddStorageFragment extends Fragment {
         productPriceEditText = view.findViewById(R.id.productPriceEditText);
         productColorEditText = view.findViewById(R.id.productColorEditText);
         productCategoryEditText = view.findViewById(R.id.productCategoryEditText);
+
+        ArrayList categoryList = new ArrayList<>();
+        categoryList.add("guitar");
+        categoryList.add("amplifier");
+        categoryList.add("pedal");
+        categoryList.add("other");
+
+        categoryAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, categoryList);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        productCategoryEditText.setAdapter(categoryAdapter);
+
+        // Set a listener to handle the category selection
+
         productQtyEditText = view.findViewById(R.id.productQtyEditText);
         productBrandEditText = view.findViewById(R.id.productBrandEditText);
         progressBar = view.findViewById(R.id.progressBar);
@@ -189,7 +210,9 @@ public class AddStorageFragment extends Fragment {
     private void uploadImage() {
         String name = productNameEditText.getText().toString();
         String brand = productBrandEditText.getText().toString();
-        String category = productCategoryEditText.getText().toString();
+//        String category = productCategoryEditText.getText().toString();
+        String category = productCategoryEditText.getSelectedItem().toString();
+
         String color = productColorEditText.getText().toString();
         String priceText = productPriceEditText.getText().toString();
         String quantityText = productQtyEditText.getText().toString();
@@ -230,12 +253,12 @@ public class AddStorageFragment extends Fragment {
 
         String name = productNameEditText.getText().toString();
         String brand = productBrandEditText.getText().toString();
-        String category = productCategoryEditText.getText().toString();
+        String category = productCategoryEditText.getSelectedItem().toString();
         String color = productColorEditText.getText().toString();
         String priceText = productPriceEditText.getText().toString();
         String quantityText = productQtyEditText.getText().toString();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
         String importDate = sdf.format(new Date());
 
         ProductDTO product = new ProductDTO();
@@ -274,15 +297,7 @@ public class AddStorageFragment extends Fragment {
         databaseRef.setValue(product)
                 .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Lỗi khi thêm sản phẩm: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-//        String documentName = "PROD_" + System.currentTimeMillis();
-//        DocumentReference documentRef = db.collection("products").document(documentName);
-//
-//        product.setProductId(documentName);
-//
-//        // Thêm tài liệu vào Firestore
-//        documentRef.set(product)
-//                .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show())
-//                .addOnFailureListener(e -> Toast.makeText(getContext(), "Lỗi khi thêm sản phẩm: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+
     }
 
 }

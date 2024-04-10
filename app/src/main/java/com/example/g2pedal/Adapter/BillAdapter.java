@@ -38,8 +38,8 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.viewHolder> {
         holder.billId.setText(""+billModel.getId());
         holder.billTittle.setText(""+billModel.getTittle());
         holder.billCategory.setText("Loại sản phẩm "+billModel.getCategory());
-        holder.billBrand.setText("Hãng: "+billModel.getBrand());
-        holder.billColor.setText("Màu: "+billModel.getColor());
+//        holder.billBrand.setText("Hãng: "+billModel.getBrand());
+//        holder.billColor.setText("Màu: "+billModel.getColor());
         holder.billQty.setText("Số lượng: "+billModel.getQuantity());
         holder.billPrice.setText("Giá: "+billModel.getPrice());
         holder.billIMG.setImageURI(billModel.getProductIMG());
@@ -61,8 +61,8 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.viewHolder> {
             billId = itemView.findViewById(R.id.txt_billId);
             billTittle=itemView.findViewById(R.id.txt_billTittle);
             billCategory=itemView.findViewById(R.id.txt_billCategory);
-            billBrand=itemView.findViewById(R.id.txt_billBrand);
-            billColor=itemView.findViewById(R.id.txt_billColor);
+//            billBrand=itemView.findViewById(R.id.txt_billBrand);
+//            billColor=itemView.findViewById(R.id.txt_billColor);
             billQty=itemView.findViewById(R.id.txt_billQty);
             billPrice=itemView.findViewById(R.id.txt_billPrice);
 

@@ -58,19 +58,29 @@
             android:id="@+id/productColorEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:hint="color" />
-        <EditText
+<!--        <EditText-->
+<!--            android:id="@+id/productCategoryEditText"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="category" />-->
+        <Spinner
+            android:padding="10dp"
+
             android:id="@+id/productCategoryEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="category" />
+            android:hint="Category" />
 
         <EditText
+            android:padding="10dp"
             android:id="@+id/productQtyEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Số lượng" />
         <EditText
+            android:padding="10dp"
             android:id="@+id/productBrandEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

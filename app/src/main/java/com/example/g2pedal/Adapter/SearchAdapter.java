@@ -45,7 +45,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.viewHolder
         holder.searchColor.setText("Màu: "+searchModel.getColor());
         holder.searchBrand.setText("Hãng: "+searchModel.getBrand());
         holder.searchDayIn.setText("Ngày nhập: "+searchModel.getDayIn());
-        holder.searchQty.setText("Số lượng: "+searchModel.getDayIn());
+        holder.searchQty.setText("Trạng thái: "+searchModel.getStatus());
 
     }
 

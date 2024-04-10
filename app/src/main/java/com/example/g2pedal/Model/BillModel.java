@@ -36,7 +36,10 @@ public class BillModel {
     public double getPay() {
         return pay;
     }
-
+    public void clearBill() {
+        pay = 0;
+        productId.clear();
+    }
 }
 
 

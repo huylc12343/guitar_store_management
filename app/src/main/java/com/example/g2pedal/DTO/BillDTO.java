@@ -8,6 +8,9 @@ public class BillDTO {
     private double totalPay;
     private String date;
 
+    public BillDTO() {
+    }
+
     public BillDTO(String billId, List<String> productIds, double totalPay, String date) {
         this.billId = billId;
         this.productIds = productIds;

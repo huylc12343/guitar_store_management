@@ -90,17 +90,7 @@ public class UserFragment extends Fragment {
         btnLogOut = view.findViewById(R.id.btnLogout);
         String uid = getArguments().getString("uid");
 
-        Bundle args = getArguments();
 
-//        // Kiểm tra xem Bundle có tồn tại và chứa khóa "myStringKey" không
-//        if (args != null && args.containsKey("uid")) {
-//            uid = args.getString("uid");
-//
-//            // Sử dụng giá trị chuỗi ở đây để thực hiện các xử lý khác
-//            // ...
-//        }else{
-//            Toast.makeText(getContext(), "Lỗi rồi", Toast.LENGTH_SHORT).show();
-//        }
         fullname = (TextView)view.findViewById(R.id.userFragUserFullname);
         mail = (TextView)view.findViewById(R.id.userFragMail);
         phonetv = (TextView)view.findViewById(R.id.userFragPhone);

@@ -41,7 +41,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.viewHolder
         holder.searchId.setText("ID: "+searchModel.getId());
         holder.searchTittle.setText("Tên: "+searchModel.getTittle());
         holder.searchCategory.setText("Loại: "+searchModel.getCategory());
-        holder.searchPrice.setText("Giá: "+searchModel.getPrice()+"VNĐ");
+        holder.searchPrice.setText("Giá: "+searchModel.getPrice()+" Dollar");
         holder.searchColor.setText("Màu: "+searchModel.getColor());
         holder.searchBrand.setText("Hãng: "+searchModel.getBrand());
         holder.searchDayIn.setText("Ngày nhập: "+searchModel.getDayIn());

@@ -1,90 +1,42 @@
 package com.example.g2pedal.Model;
 
-import android.net.Uri;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BillModel {
-    String id;
-    private Uri productIMG;
-    private String category;
-    private String tittle;
-    private String brand;
-    private String color;
-    private String quantity;
-    private String price;
+    private static BillModel instance;
+    private double pay;
+    private List<String> productId;
 
-
-    public BillModel(String id, Uri productIMG, String category, String tittle, String brand, String color, String quantity, String price) {
-        this.id = id;
-        this.productIMG = productIMG;
-        this.category = category;
-        this.tittle = tittle;
-        this.brand = brand;
-        this.color = color;
-        this.quantity = quantity;
-        this.price = price;
+    private BillModel() {
+        pay = 0;
+        productId = new ArrayList<>();
     }
 
-    public String getId() {
-        return id;
+    public static synchronized BillModel getInstance() {
+        if (instance == null) {
+            instance = new BillModel();
+        }
+        return instance;
+    }
+    public List<String> getBillItems() {
+        return productId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void addToBill(StorageDataModel product){
+        productId.add(product.getId());
+        double price = Double.parseDouble(product.getPrice());
+        pay += price;
+    }
+    public void removeFromBill(StorageDataModel product,int position){
+        productId.remove(product.id);
+        double price = Double.parseDouble(product.getPrice());
+        pay -= price;
+    }
+    public double getPay() {
+        return pay;
     }
 
-    public Uri getProductIMG() {
-        return productIMG;
-    }
-
-    public void setProductIMG(Uri productIMG) {
-        this.productIMG = productIMG;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getTittle() {
-        return tittle;
-    }
-
-    public void setTittle(String tittle) {
-        this.tittle = tittle;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(String quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
 }
+
+

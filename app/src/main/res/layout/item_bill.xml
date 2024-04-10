@@ -23,16 +23,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/txt_billId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="5dp"
-                android:text="0"
-                android:textColor="@color/black"
 
-                android:textSize="16sp"
-                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/iv_billIMG"
@@ -46,47 +37,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/txt_billTittle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="Guitar Nobrand"
-                        android:textColor="@color/black"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/txt_billCategory"
+                    android:id="@+id/txt_billProductId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Guitar"
-                    android:textColor="@color/gray"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/txt_billQty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:paddingHorizontal="5dp"
-                    android:text="Số lượng: 1"
+                    android:text="Product ID"
                     android:textColor="@color/black"
-                    android:textSize="10sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/txt_billPrice"
+                    android:id="@+id/txt_billProductName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Product Name"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/txt_billProductPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -101,7 +73,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/iv_del"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_margin="@dimen/size10dp"

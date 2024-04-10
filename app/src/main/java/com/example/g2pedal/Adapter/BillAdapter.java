@@ -6,23 +6,36 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.g2pedal.BottomNavBar.HomeNav.HomeFunc.BillFragment;
 import com.example.g2pedal.Model.BillModel;
+import com.example.g2pedal.Model.SearchModel;
+import com.example.g2pedal.Model.StorageDataModel;
 import com.example.g2pedal.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class BillAdapter extends RecyclerView.Adapter<BillAdapter.viewHolder> {
+    private BillFragment billFragment;
     private Context context;
-    private List<BillModel> billModels;
+    private BillModel bill = BillModel.getInstance();
 
-    public BillAdapter(Context context, List<BillModel> billModels) {
+    private List<StorageDataModel> productLists;
+
+    public BillAdapter(Context context, List<StorageDataModel> productLists) {
         this.context = context;
-        this.billModels = billModels;
+        this.productLists = productLists;
+    }
+    public BillAdapter(Context context, List<StorageDataModel> productLists, BillFragment billFragment) {
+        this.context = context;
+        this.productLists = productLists;
+        this.billFragment = billFragment;
     }
 
     @NonNull
@@ -34,38 +47,53 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.viewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull BillAdapter.viewHolder holder, int position) {
-        final BillModel billModel = billModels.get(position);
-        holder.billId.setText(""+billModel.getId());
-        holder.billTittle.setText(""+billModel.getTittle());
-        holder.billCategory.setText("Loại sản phẩm "+billModel.getCategory());
-//        holder.billBrand.setText("Hãng: "+billModel.getBrand());
-//        holder.billColor.setText("Màu: "+billModel.getColor());
-        holder.billQty.setText("Số lượng: "+billModel.getQuantity());
-        holder.billPrice.setText("Giá: "+billModel.getPrice());
-        holder.billIMG.setImageURI(billModel.getProductIMG());
+
+        StorageDataModel productList = productLists.get(position);
 
 
+        Picasso.get().load(productList.getDataIMG()).into(holder.billIMG);
+
+        holder.billId.setText("ID: "+productList.getId());
+        holder.billTittle.setText("Name: "+productList.getTittle());
+        holder.billPrice.setText("Giá: "+productList.getPrice()+" Dollar");
+
+        holder.iv_del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                del(productList);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return billModels.size();
+        return productLists.size();
     }
 
     public class viewHolder extends RecyclerView.ViewHolder {
-        private ImageView billIMG;
+        private ImageView billIMG, iv_del;
         private TextView billId,billTittle,billCategory,billBrand,billColor,billQty,billPrice;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             billIMG=itemView.findViewById(R.id.iv_billIMG);
-            billId = itemView.findViewById(R.id.txt_billId);
-            billTittle=itemView.findViewById(R.id.txt_billTittle);
-            billCategory=itemView.findViewById(R.id.txt_billCategory);
-//            billBrand=itemView.findViewById(R.id.txt_billBrand);
-//            billColor=itemView.findViewById(R.id.txt_billColor);
-            billQty=itemView.findViewById(R.id.txt_billQty);
-            billPrice=itemView.findViewById(R.id.txt_billPrice);
-
+            billId = itemView.findViewById(R.id.txt_billProductId);
+            billTittle = itemView.findViewById(R.id.txt_billProductName);
+            billPrice=itemView.findViewById(R.id.txt_billProductPrice);
+            iv_del = itemView.findViewById(R.id.iv_del);
         }
     }
+    private void del(StorageDataModel product){
+        int position = productLists.indexOf(product);
+        if (position != -1) {
+            bill.getInstance().removeFromBill(product,position);
+            productLists.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, getItemCount());
+            Toast.makeText(context, "Đã xóa sản phẩm " + product.getTittle()+" khỏi giỏ hàng!!", Toast.LENGTH_SHORT).show();
+            billFragment.updateTotalPay(bill.getPay());
+        }
+
+    }
+
+
 }

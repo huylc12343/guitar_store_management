@@ -5,12 +5,15 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.g2pedal.Model.BillModel;
 import com.example.g2pedal.Model.StorageDataModel;
 import com.example.g2pedal.R;
 import com.squareup.picasso.Picasso;
@@ -19,6 +22,7 @@ import java.util.List;
 
 public class StorageDataAdapter extends RecyclerView.Adapter<StorageDataAdapter.ViewHolder> {
     private Context context;
+    private BillModel bill = BillModel.getInstance();
     private List<StorageDataModel> storageDataModels;
 
     public StorageDataAdapter(Context context, List<StorageDataModel> storageDataModels) {
@@ -41,7 +45,7 @@ public class StorageDataAdapter extends RecyclerView.Adapter<StorageDataAdapter.
         Picasso.get().load(storageDataModel.getDataIMG()).into(holder.storageDataIMG);
 
         holder.storageDataTittle.setText(storageDataModel.getTittle());
-        holder.storageDataPrice.setText(storageDataModel.getPrice() + "VNĐ");
+        holder.storageDataPrice.setText(storageDataModel.getPrice() + " Dollar");
         holder.storageDataId.setText("ID: " + storageDataModel.getId());
         holder.storageDataStatus.setText(storageDataModel.getStatus());
 
@@ -50,6 +54,12 @@ public class StorageDataAdapter extends RecyclerView.Adapter<StorageDataAdapter.
         } else {
             holder.storageDataStatus.setBackgroundResource(R.drawable.bg_status_aval);
         }
+        holder.iv_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                add(storageDataModel);
+            }
+        });
     }
 
     @Override
@@ -58,7 +68,8 @@ public class StorageDataAdapter extends RecyclerView.Adapter<StorageDataAdapter.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView storageDataIMG;
+        private ImageView storageDataIMG,iv_add;
+
         private TextView storageDataTittle, storageDataPrice, storageDataId, storageDataStatus;
 
         public ViewHolder(@NonNull View itemView) {
@@ -68,6 +79,12 @@ public class StorageDataAdapter extends RecyclerView.Adapter<StorageDataAdapter.
             storageDataPrice = itemView.findViewById(R.id.txt_storageDataPrice);
             storageDataId = itemView.findViewById(R.id.txt_storageDataId);
             storageDataStatus = itemView.findViewById(R.id.txt_storageDataStatus);
+            iv_add =  itemView.findViewById(R.id.iv_Add);
         }
     }
+    private void add(StorageDataModel product){
+        bill.getInstance().addToBill(product);
+        Toast.makeText(context, "Đã thêm sảm phẩm " + product.getTittle()+" vào giỏ hàng!!", Toast.LENGTH_SHORT).show();
+    }
+
 }

@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -31,7 +32,6 @@ import com.example.g2pedal.Adapter.StorageDataAdapter;
 import com.example.g2pedal.DatabaseHelper.GalleryHelper;
 import com.example.g2pedal.Model.StorageDataModel;
 import com.example.g2pedal.R;
-import com.example.g2pedal.Repository.StorageDataRepository;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -76,22 +76,14 @@ public class StorageDataFragment extends Fragment {
     private TextView txtCategory;
 
     private RecyclerView rvStorageData;
-    StorageDataRepository storageDataRepository;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    CollectionReference collectionRef = db.collection("product");
-    String id;
-    String url;
-    String name;
-    String category1;
-    String price1;
-    String status1;
-    String desiredCategory;
+
+
+
     private String category;
     private TextView tvStorageData;
-    List<StorageDataModel> storageDataModelList = new ArrayList<>();
 
     private StorageDataAdapter storageDataAdapter;
-    private static final int REQUEST_PERMISSION = 1;
+    private Button iv_add;
 
     public StorageDataFragment() {
         // Required empty public constructor
@@ -129,6 +121,7 @@ public class StorageDataFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_storage_data, container, false);
 
+
         tvStorageData = view.findViewById(R.id.tvStorageData);
         txtCategory = view.findViewById(R.id.tvStorageData);
         rvStorageData = view.findViewById(R.id.rv_storage_data);
@@ -145,15 +138,12 @@ public class StorageDataFragment extends Fragment {
 
         // Lấy tham số từ Bundle (nếu có)
         Bundle bundle = getArguments();
-        if (bundle != null) {
-            // Lấy dữ liệu từ Bundle
-            String data = bundle.getString("category");
+        String data = bundle.getString("category");
 
-            // Xử lý dữ liệu theo ý muốn
-            // Ví dụ: Hiển thị dữ liệu lên TextView
-            category = data;
-            tvStorageData.setText(data);
-        }
+        // Xử lý dữ liệu theo ý muốn
+        // Ví dụ: Hiển thị dữ liệu lên TextView
+        category = data;
+        tvStorageData.setText(data);
 
         // Đọc dữ liệu từ Firebase
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("products");
@@ -189,6 +179,7 @@ public class StorageDataFragment extends Fragment {
         FragmentManager fragmentManager = getParentFragmentManager();
         fragmentManager.popBackStack();
     }
+
 
 
 }

@@ -3,6 +3,7 @@ package com.example.g2pedal.BottomNavBar.HomeNav.HomeFunc;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -10,14 +11,25 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.g2pedal.Adapter.BillAdapter;
+import com.example.g2pedal.DTO.ProductDTO;
 import com.example.g2pedal.Model.BillModel;
+import com.example.g2pedal.Model.SearchModel;
+import com.example.g2pedal.Model.StorageDataModel;
 import com.example.g2pedal.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +49,13 @@ public class BillFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private Button btn_pay;
     private RecyclerView rvMyBill;
-
+    private TextView txt_pay;
+    private List<StorageDataModel> billModelList = new ArrayList<>();
+    private BillAdapter billAdapter;
+    BillModel billModel = BillModel.getInstance();
+    List<String> billItemsId = billModel.getBillItems();
 
     public BillFragment() {
         // Required empty public constructor
@@ -76,12 +93,13 @@ public class BillFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bill, container, false);
 
+        btn_pay = view.findViewById(R.id.btn_pay);
         rvMyBill = view.findViewById(R.id.rv_bill);
-        List<BillModel> billModelList = new ArrayList<>();
-        billModelList.add(new BillModel("0",getUri(R.drawable.guitar_1),"Guitar","Fender Statocaster","Fender","Black","1","17.000.000VND"));
-        billModelList.add(new BillModel("1",getUri(R.drawable.guitar_2),"Guitar","Fender Statocaster","Fender","BabyBlue","1","17.000.000VND"));
+        txt_pay = view.findViewById(R.id.totalPay);
+        updateTotalPay(billModel.getPay());
+        queryProduct();
 
-        BillAdapter billAdapter = new BillAdapter(getContext(), billModelList);
+        billAdapter = new BillAdapter(getContext(), billModelList,this);
         rvMyBill.setHasFixedSize(true);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(),1, RecyclerView.VERTICAL,false);
         rvMyBill.addItemDecoration(new DividerItemDecoration(requireContext(),DividerItemDecoration.VERTICAL));
@@ -98,6 +116,12 @@ public class BillFragment extends Fragment {
             }
         });
 
+        btn_pay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                completePayment();
+            }
+        });
         return view;
         // Inflate the layout for this fragment
     }
@@ -105,7 +129,44 @@ public class BillFragment extends Fragment {
         FragmentManager fragmentManager = getParentFragmentManager();
         fragmentManager.popBackStack();
     }
-    public Uri getUri (int resId){
-        return Uri.parse("android.resource://"  + getContext().getPackageName().toString() + "/" + resId);
+
+    private void queryProduct() {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("products");
+
+        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                billModelList.clear(); // Xóa dữ liệu cũ
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    // Chuyển đổi DataSnapshot thành đối tượng ProductDTO
+                    ProductDTO product = snapshot.getValue(ProductDTO.class);
+                    if (product != null) {
+                        // Kiểm tra xem product có trùng id với billItemsId không
+                        if (billItemsId.contains(product.getProductId())) {
+                            billModelList.add(new StorageDataModel(product.getProductId(),
+                                    product.getImageUrl(), product.getName(), product.getCategory(),
+                                    String.valueOf(product.getPrice()), product.getStatus()));
+                        }
+                    }
+                }
+
+                // Cập nhật adapter và hiển thị dữ liệu
+                billAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Firebase", "Error when reading data", databaseError.toException());
+            }
+        });
     }
+    private void completePayment(){
+
+    }
+    public void updateTotalPay(double totalPay) {
+        String totalText = "Tổng hóa đơn: " + totalPay + " Dollar";
+        txt_pay.setText(totalText);
+    }
+
 }

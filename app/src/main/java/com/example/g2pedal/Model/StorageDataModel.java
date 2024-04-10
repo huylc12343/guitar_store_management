@@ -4,8 +4,10 @@ import android.net.Uri;
 
 public class StorageDataModel {
     String id;
-    private Uri dataIMG;
+    private String dataIMG;
     private String tittle;
+    private String category;
+
     private String price;
     private String status;
 
@@ -16,12 +18,29 @@ public class StorageDataModel {
         this.status = status;
     }
 
-    public StorageDataModel(String id, Uri dataIMG, String tittle, String price, String status) {
+    public StorageDataModel(String id, String dataIMG, String tittle, String price, String status) {
         this.id = id;
         this.dataIMG = dataIMG;
         this.tittle = tittle;
         this.price = price;
         this.status = status;
+    }
+
+    public StorageDataModel(String id, String dataIMG, String tittle, String category, String price, String status) {
+        this.id = id;
+        this.dataIMG = dataIMG;
+        this.tittle = tittle;
+        this.category = category;
+        this.price = price;
+        this.status = status;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getId() {
@@ -32,11 +51,11 @@ public class StorageDataModel {
         this.id = id;
     }
 
-    public Uri getDataIMG() {
+    public String getDataIMG() {
         return dataIMG;
     }
 
-    public void setDataIMG(Uri dataIMG) {
+    public void setDataIMG(String dataIMG) {
         this.dataIMG = dataIMG;
     }
 

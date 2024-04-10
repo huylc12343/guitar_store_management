@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentManager;
 
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.g2pedal.DTO.ProductDTO;
@@ -38,6 +40,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -74,6 +77,7 @@ public class AddStorageFragment extends Fragment {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private Button btnAdd;
+    private ProgressBar progressBar;
     private EditText productNameEditText,productPriceEditText,productColorEditText,
             productCategoryEditText,productQtyEditText,productBrandEditText;
 
@@ -121,6 +125,7 @@ public class AddStorageFragment extends Fragment {
         productCategoryEditText = view.findViewById(R.id.productCategoryEditText);
         productQtyEditText = view.findViewById(R.id.productQtyEditText);
         productBrandEditText = view.findViewById(R.id.productBrandEditText);
+        progressBar = view.findViewById(R.id.progressBar);
 
         btnAdd = view.findViewById(R.id.btnAddNewProduct);
         btnAdd.setOnClickListener(new View.OnClickListener() {
@@ -182,53 +187,102 @@ public class AddStorageFragment extends Fragment {
     }
 
     private void uploadImage() {
+        String name = productNameEditText.getText().toString();
+        String brand = productBrandEditText.getText().toString();
+        String category = productCategoryEditText.getText().toString();
+        String color = productColorEditText.getText().toString();
+        String priceText = productPriceEditText.getText().toString();
+        String quantityText = productQtyEditText.getText().toString();
+
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(brand) || TextUtils.isEmpty(category)
+                || TextUtils.isEmpty(color) || TextUtils.isEmpty(priceText) || TextUtils.isEmpty(quantityText)) {
+            Toast.makeText(getContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (pathUri != null) {
+            progressBar.setVisibility(View.VISIBLE); // Hiển thị ProgressBar khi bắt đầu tải lên
             StorageReference fileRef = storage.getReference().child("images/" + System.currentTimeMillis() + ".png");
-            fileRef.putFile(pathUri).addOnSuccessListener(taskSnapshot -> {
-                fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    String photoUrl = uri.toString();
-                    uploadProduct(photoUrl);
-                });
-            }).addOnFailureListener(e -> Toast.makeText(getContext(), "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            fileRef.putFile(pathUri)
+                    .addOnProgressListener(taskSnapshot -> {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                        progressBar.setProgress((int) progress); // Cập nhật tiến độ của ProgressBar
+                    })
+                    .addOnSuccessListener(taskSnapshot -> {
+                        fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                            String photoUrl = uri.toString();
+
+                            uploadProduct(photoUrl);
+                            progressBar.setVisibility(View.INVISIBLE); // Ẩn ProgressBar sau khi tải lên thành công
+                        });
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getContext(), "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.INVISIBLE); // Ẩn ProgressBar nếu tải lên thất bại
+                    });
         } else {
             Toast.makeText(getContext(), "No image selected", Toast.LENGTH_SHORT).show();
         }
     }
 
 
-    private void uploadProduct(String photoUrl) {
-        ProductDTO product = new ProductDTO();
-        product.setName(productNameEditText.getText().toString());
-        product.setBrand(productBrandEditText.getText().toString());
-        product.setCategory(productCategoryEditText.getText().toString());
-        product.setColor(productColorEditText.getText().toString());
 
-        // Định dạng và đặt ngày nhập
+    private void uploadProduct(String photoUrl) {
+
+        String name = productNameEditText.getText().toString();
+        String brand = productBrandEditText.getText().toString();
+        String category = productCategoryEditText.getText().toString();
+        String color = productColorEditText.getText().toString();
+        String priceText = productPriceEditText.getText().toString();
+        String quantityText = productQtyEditText.getText().toString();
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String importDate = sdf.format(new Date());
+
+        ProductDTO product = new ProductDTO();
+        product.setName(name);
+        product.setBrand(brand);
+        product.setCategory(category);
+        product.setColor(color);
         product.setImportDate(importDate);
 
         String productId = "PROD_" + System.currentTimeMillis();
         product.setProductId(productId);
- // Thay đổi theo logic ứng dụng của bạn
-        product.setStatus("In Stock");
+
+        // Thay đổi theo logic ứng dụng của bạn
+        String status = (Integer.parseInt(quantityText) == 0) ? "Sold Out" : "In Stock";
+        product.setStatus(status);
 
         // Chuyển đổi kiểu dữ liệu từ String sang Double và Integer
         try {
-            double price = Double.parseDouble(productPriceEditText.getText().toString());
-            int quantity = Integer.parseInt(productQtyEditText.getText().toString());
+            double price = Double.parseDouble(priceText);
+            int quantity = Integer.parseInt(quantityText);
             product.setPrice(price);
             product.setQuantity(quantity);
         } catch (NumberFormatException e) {
-            Toast.makeText(getContext(), "Error in number format", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Lỗi định dạng số", Toast.LENGTH_SHORT).show();
             return;
         }
 
         product.setImageUrl(photoUrl);
 
-        db.collection("products").add(product)
-                .addOnSuccessListener(documentReference -> Toast.makeText(getContext(), "Product added successfully", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(getContext(), "Error adding product: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        String documentName = "PROD_" + System.currentTimeMillis();
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("products").child(documentName);
+
+        product.setProductId(documentName);
+
+// Up dữ liệu lên Realtime Database
+        databaseRef.setValue(product)
+                .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Lỗi khi thêm sản phẩm: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+//        String documentName = "PROD_" + System.currentTimeMillis();
+//        DocumentReference documentRef = db.collection("products").document(documentName);
+//
+//        product.setProductId(documentName);
+//
+//        // Thêm tài liệu vào Firestore
+//        documentRef.set(product)
+//                .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show())
+//                .addOnFailureListener(e -> Toast.makeText(getContext(), "Lỗi khi thêm sản phẩm: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
 }

@@ -7,7 +7,7 @@ public class ProductDTO {
     private String category;
     private double price;
     private String color;
-    private String productName;
+
     private String importDate;
     private String status;
     private String brand;
@@ -25,14 +25,13 @@ public class ProductDTO {
     }
 
     public ProductDTO(String productId, String name,
-                      String category, double price, String color, String productName,
+                      String category, double price, String color,
                       String importDate, String status, String brand, int quantity) {
         this.productId = productId;
         this.name = name;
         this.category = category;
         this.price = price;
         this.color = color;
-        this.productName = productName;
         this.importDate = importDate;
         this.status = status;
         this.brand = brand;
@@ -79,13 +78,6 @@ public class ProductDTO {
         this.color = color;
     }
 
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
 
     public String getImportDate() {
         return importDate;

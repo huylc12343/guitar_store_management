@@ -101,14 +101,14 @@ public class StorageFragment extends Fragment {
         guitarFragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceFragment(new StorageDataFragment(),"Guitar");
+                replaceFragment(new StorageDataFragment(),"guitar");
             }
         });
 
         amplifierFragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceFragment(new StorageDataFragment(),"Amplifier");
+                replaceFragment(new StorageDataFragment(),"amplifier");
 
             }
         });
@@ -116,7 +116,7 @@ public class StorageFragment extends Fragment {
         pedalFragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceFragment(new StorageDataFragment(),"Pedal");
+                replaceFragment(new StorageDataFragment(),"pedal");
 
             }
         });
@@ -124,7 +124,7 @@ public class StorageFragment extends Fragment {
         otherFragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceFragment(new StorageDataFragment(),"Other");
+                replaceFragment(new StorageDataFragment(),"other");
 
             }
         });

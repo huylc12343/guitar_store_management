@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,8 +22,10 @@ public class LoginActivity extends AppCompatActivity {
 
     Button btnLogin;
     TextView tvRegis;
+    ProgressBar progressBar;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://g2pedal-default-rtdb.firebaseio.com/");
         firebaseAuth = FirebaseAuth.getInstance();
 
-
+        progressBar = findViewById(R.id.progressBarlg);
         EditText txtUsername = findViewById(R.id.lgUsername);
         EditText txtPassword = findViewById(R.id.lgPassword);
         btnLogin = (Button) findViewById(R.id.btnLoginlg);
@@ -58,10 +61,12 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
     private void login(String email, String password){
+        progressBar.setVisibility(View.VISIBLE);
         if (firebaseAuth != null) {
             firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
+                            progressBar.setVisibility(View.INVISIBLE);
                             Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             if (user != null) {

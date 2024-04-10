@@ -8,6 +8,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.example.g2pedal.DTO.ProductDTO;
+
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -17,6 +20,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +32,25 @@ import com.example.g2pedal.DatabaseHelper.GalleryHelper;
 import com.example.g2pedal.Model.StorageDataModel;
 import com.example.g2pedal.R;
 import com.example.g2pedal.Repository.StorageDataRepository;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import android.content.ContentResolver;
+import android.widget.Toast;
+
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -56,7 +77,20 @@ public class StorageDataFragment extends Fragment {
 
     private RecyclerView rvStorageData;
     StorageDataRepository storageDataRepository;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    CollectionReference collectionRef = db.collection("product");
+    String id;
+    String url;
+    String name;
+    String category1;
+    String price1;
+    String status1;
+    String desiredCategory;
+    private String category;
+    private TextView tvStorageData;
+    List<StorageDataModel> storageDataModelList = new ArrayList<>();
 
+    private StorageDataAdapter storageDataAdapter;
     private static final int REQUEST_PERMISSION = 1;
 
     public StorageDataFragment() {
@@ -92,110 +126,69 @@ public class StorageDataFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_storage_data, container, false);
+
+        tvStorageData = view.findViewById(R.id.tvStorageData);
         txtCategory = view.findViewById(R.id.tvStorageData);
         rvStorageData = view.findViewById(R.id.rv_storage_data);
         ImageButton btnBack = view.findViewById(R.id.btnStorageDataToHome);
 
-
-        String category = getArguments().getString("category");
-        String storageLabel = "Kho chứa "+ category;
-        txtCategory.setText(storageLabel);
-
-        List<StorageDataModel> storageDataModelList = new ArrayList<>();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
-            } else {
-                initData(category);
-
-            }
-        } else {
-            initData(category);
-
-        }
-
-        StorageDataAdapter storageDataAdapter = new StorageDataAdapter(getContext(),this.storageDataRepository.getStorageDataModelList());
+        // Thiết lập cho RecyclerView
         rvStorageData.setHasFixedSize(true);
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),2, RecyclerView.VERTICAL,false);
-        rvStorageData.addItemDecoration(new DividerItemDecoration(requireContext(),DividerItemDecoration.HORIZONTAL));
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         rvStorageData.setLayoutManager(layoutManager);
-        rvStorageData.setItemAnimator(new DefaultItemAnimator());
+
+        List<StorageDataModel> productModelList = new ArrayList<>();
+        storageDataAdapter = new StorageDataAdapter(getContext(), productModelList);
         rvStorageData.setAdapter(storageDataAdapter);
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        // Lấy tham số từ Bundle (nếu có)
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            // Lấy dữ liệu từ Bundle
+            String data = bundle.getString("category");
+
+            // Xử lý dữ liệu theo ý muốn
+            // Ví dụ: Hiển thị dữ liệu lên TextView
+            category = data;
+            tvStorageData.setText(data);
+        }
+
+        // Đọc dữ liệu từ Firebase
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("products");
+        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                // Quay lại HomeFragment
-                goBack();
-                storageDataRepository.delDB();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                productModelList.clear(); // Xóa dữ liệu cũ
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    // Chuyển đổi DataSnapshot thành đối tượng ProductDTO
+                    ProductDTO product = snapshot.getValue(ProductDTO.class);
+                    if (product != null && product.getCategory().equalsIgnoreCase(category)) {
+                        productModelList.add(new StorageDataModel(product.getProductId(), product.getImageUrl(), product.getName(), product.getCategory(), String.valueOf(product.getPrice()), product.getStatus()));
+                    }
+                }
+
+                // Cập nhật adapter và hiển thị dữ liệu
+                storageDataAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Firebase", "Error when reading data", databaseError.toException());
             }
         });
 
+        btnBack.setOnClickListener(v -> goBack());
+
         return view;
     }
+
     private void goBack(){
         FragmentManager fragmentManager = getParentFragmentManager();
         fragmentManager.popBackStack();
     }
-    public Uri getUri (int resId){
-        return Uri.parse("android.resource://"  + getContext().getPackageName().toString() + "/" + resId);
-    }
-    private void initData(String category){
-        ArrayList<StorageDataModel> alProduct = new ArrayList<>();
-        List<Uri> imageUris = GalleryHelper.getAllImages(requireContext(),category);
 
-        for (int i = 0; i < imageUris.size(); i++) {
-            String id = Integer.toString(i);
-            StorageDataModel p = new StorageDataModel(id, category + "_" + i, "", "");
-            p.setDataIMG(imageUris.get(i));
-            float price = Float.parseFloat(String.format("%.2f", new Random().nextFloat() * 10000));
-            String strPrice = Float.toString(price);
-            p.setPrice(strPrice);
-
-            if (i % 3 != 1) {
-                p.setStatus("Còn hàng");
-            } else {
-                p.setStatus("Hết hàng");
-            }
-            if (imageIsNull(p.getDataIMG())) {
-                alProduct.add(p);
-            }
-        }
-        this.storageDataRepository = new StorageDataRepository(alProduct);
-
-    }
-    public static int getResId(String resName, Class<?> c) {
-
-        try {
-            Field idField = c.getDeclaredField(resName);
-            return idField.getInt(idField);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return -1;
-        }
-    }
-    private boolean imageIsNull(Uri imgUri) {
-        try{
-        ContentResolver contentResolver = requireContext().getContentResolver();
-        InputStream inputStream = contentResolver.openInputStream(imgUri);
-        Drawable drawable = Drawable.createFromStream(inputStream, imgUri.toString());
-
-        // Nếu drawable không null, tức là imageUri đại diện cho một hình ảnh hợp lệ
-        if (drawable != null) {
-            return true;
-        }
-        }
-         catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 
 }

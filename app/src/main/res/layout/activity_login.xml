@@ -94,6 +94,12 @@
               android:textColor="@color/primary"
               android:textStyle="bold"/> <!-- Làm nổi bật chữ "Đăng ký" -->
       </LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressBarlg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible" />
   </LinearLayout>
 
 

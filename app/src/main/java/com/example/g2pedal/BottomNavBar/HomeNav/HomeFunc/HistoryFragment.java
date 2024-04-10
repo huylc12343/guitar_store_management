@@ -2,8 +2,11 @@ package com.example.g2pedal.BottomNavBar.HomeNav.HomeFunc;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -11,7 +14,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.example.g2pedal.Adapter.HistoryAdapter;
 import com.example.g2pedal.R;
+import com.example.g2pedal.Model.HistoryModel;
+import com.example.g2pedal.DTO.BillDTO;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +43,7 @@ public class HistoryFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    List<HistoryModel> historyModels = new ArrayList<>();
 
     private RecyclerView rvStorageData;
     public HistoryFragment() {
@@ -65,6 +81,44 @@ public class HistoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
+
+        // Khởi tạo RecyclerView
+        rvStorageData = view.findViewById(R.id.rv_history);
+        rvStorageData.setHasFixedSize(true);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),1);
+        rvStorageData.setLayoutManager(layoutManager);
+        HistoryAdapter adapter = new HistoryAdapter(getContext(), historyModels);
+        rvStorageData.setAdapter(adapter);
+
+        // Lấy dữ liệu từ Firebase Realtime Database
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("bill");
+
+// Sắp xếp các bill theo thuộc tính "date"
+        databaseReference.orderByChild("date").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot billSnapshot : dataSnapshot.getChildren()) {
+                    String billId = billSnapshot.child("billId").getValue(String.class);
+                    String date = billSnapshot.child("date").getValue(String.class);
+                    Double totalPay = billSnapshot.child("totalPay").getValue(Double.class);
+
+                    List<String> productIds = new ArrayList<>();
+                    for (DataSnapshot productSnapshot : billSnapshot.child("productIds").getChildren()) {
+                        String productId = productSnapshot.getValue(String.class);
+                        productIds.add(productId);
+                    }
+
+                    HistoryModel historyModel = new HistoryModel(billId, productIds, totalPay, date);
+                    historyModels.add(historyModel);
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý khi có lỗi xảy ra trong quá trình đọc dữ liệu
+            }
+        });
 
         ImageButton btnBack = view.findViewById(R.id.btnHistoryToHome);
         btnBack.setOnClickListener(new View.OnClickListener() {

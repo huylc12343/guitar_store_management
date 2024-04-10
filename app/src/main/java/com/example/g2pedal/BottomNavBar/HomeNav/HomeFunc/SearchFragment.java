@@ -92,6 +92,7 @@ public class SearchFragment extends Fragment {
         txtSearch = view.findViewById(R.id.txtSearch);
         progressBar = view.findViewById(R.id.progressBarSearch);
         rv_search = view.findViewById(R.id.rv_search_fragment);
+
         rv_search.setHasFixedSize(true);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 1);
         rv_search.setLayoutManager(layoutManager);

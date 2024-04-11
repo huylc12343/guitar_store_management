@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -17,7 +16,7 @@ import android.widget.ImageButton;
 import com.example.g2pedal.Adapter.HistoryAdapter;
 import com.example.g2pedal.R;
 import com.example.g2pedal.Model.HistoryModel;
-import com.example.g2pedal.DTO.BillDTO;
+
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -116,7 +115,6 @@ public class HistoryFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Xử lý khi có lỗi xảy ra trong quá trình đọc dữ liệu
             }
         });
 
@@ -124,7 +122,6 @@ public class HistoryFragment extends Fragment {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Quay lại HomeFragment
                 goBack();
             }
         });

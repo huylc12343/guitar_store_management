@@ -100,7 +100,7 @@ public class UserFragment extends Fragment {
         btnLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut(); // Sign out the current user
+                FirebaseAuth.getInstance().signOut(); // Sign out
                 Toast.makeText(getContext(), "Đăng xuất thành công", Toast.LENGTH_SHORT).show();
                 if (getActivity() != null) {
                     getActivity().startActivity(new Intent(getActivity(), LoginActivity.class));
@@ -120,18 +120,18 @@ public class UserFragment extends Fragment {
 
             @Override
             public void onUserNotFound() {
-                // Người dùng không tồn tại trong cơ sở dữ liệu
+
             }
 
             @Override
             public void onDataLoadFailed(String errorMessage) {
-                // Xử lý khi có lỗi xảy ra trong quá trình tải dữ liệu
+
             }
         });
 
 
         return view;
-//        return inflater.inflate(R.layout.fragment_user, container, false);
+
     }
 
     private List<String> createUserList() {

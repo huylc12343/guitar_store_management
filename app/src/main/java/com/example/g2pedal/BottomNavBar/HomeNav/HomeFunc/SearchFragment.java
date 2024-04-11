@@ -7,22 +7,18 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Editable;
-import android.text.TextWatcher;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.example.g2pedal.Adapter.SearchAdapter;
-import com.example.g2pedal.Adapter.StorageDataAdapter;
 import com.example.g2pedal.DTO.ProductDTO;
 import com.example.g2pedal.Model.SearchModel;
-import com.example.g2pedal.Model.StorageDataModel;
 import com.example.g2pedal.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -103,9 +99,6 @@ public class SearchFragment extends Fragment {
 
         ImageButton btnBack = view.findViewById(R.id.btnSearchToHome);
         ImageButton btnSearch = view.findViewById(R.id.btnSearchProduct);
-//        searchModelList.add(new SearchModel("product.getProductId()", "https://firebasestorage.googleapis.com/v0/b/g2pedal.appspot.com/o/images%2F1712718790070.png?alt=media&token=84730978-0e1a-415e-a52f-73e72b48dae0",
-//                "product.getCategory()"," product.getName()", "product.getBrand()", "product.getColor()", "product.getQuantity() + ", "product.getPrice() ", "product.getStatus()"," product.getImportDate()"));
-
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,7 +109,6 @@ public class SearchFragment extends Fragment {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Quay lại HomeFragment
                 goBack();
             }
         });
@@ -128,34 +120,7 @@ public class SearchFragment extends Fragment {
         FragmentManager fragmentManager = getParentFragmentManager();
         fragmentManager.popBackStack();
     }
-//    private void queryProduct(String productName) {
-//        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("products");
-//        databaseRef.orderByChild("name")
-//                .startAt(productName)
-//                .endAt(productName + "\uf8ff")
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        searchModelList.clear(); // Xóa dữ liệu cũ
-//
-//                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                            // Chuyển đổi DataSnapshot thành đối tượng ProductDTO
-//                            ProductDTO product = snapshot.getValue(ProductDTO.class);
-//                            if (product != null && product.getCategory().equalsIgnoreCase(productName)) {
-//                                searchModelList.add(new SearchModel(product.getProductId(), product.getImageUrl(), product.getCategory(), product.getName(), product.getBrand(), product.getColor(), product.getQuantity() + "", product.getPrice() + "", product.getStatus(), product.getImportDate()));
-//                            }
-//                        }
-//
-//                        // Cập nhật adapter và hiển thị dữ liệu
-//                        searchAdapter.notifyDataSetChanged();
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//                        Log.e("Firebase", "Error when reading data", databaseError.toException());
-//                    }
-//                });
-//    }
+
     private void queryProduct(String searchText) {
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("products");
         progressBar.setVisibility(View.VISIBLE);

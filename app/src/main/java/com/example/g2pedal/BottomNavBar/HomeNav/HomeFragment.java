@@ -1,12 +1,10 @@
 package com.example.g2pedal.BottomNavBar.HomeNav;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,7 +71,6 @@ public class HomeFragment extends Fragment {
         btnBill = view.findViewById(R.id.btnBill);
         btnAddStorage = view.findViewById(R.id.btnAddStorage);
         btnHistory = view.findViewById(R.id.btnHistory);
-//        btnSearch.setOnClickListener((View.OnClickListener)this);
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -8,7 +8,7 @@ public class UserDTO {
     private String password;
 
     public UserDTO() {
-        // Constructor mặc định (cần thiết cho Firebase)
+
     }
 
     public UserDTO(String fullName, String mail, String phone,String password) {

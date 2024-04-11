@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://g2pedal-default-rtdb.firebaseio.com/");
+//        databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://g2pedal-default-rtdb.firebaseio.com/");
         firebaseAuth = FirebaseAuth.getInstance();
 
         progressBar = findViewById(R.id.progressBarlg);
@@ -70,9 +70,9 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             if (user != null) {
-                                String uid = user.getUid(); // Lấy UID của người dùng
+                                String uid = user.getUid(); // Lấy Uid của người dùng
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                intent.putExtra("uid", uid); // Truyền UID qua Intent
+                                intent.putExtra("uid", uid); // Truyền Uid vào Fragment qua Intent
                                 startActivity(intent);
                             }
                         } else {

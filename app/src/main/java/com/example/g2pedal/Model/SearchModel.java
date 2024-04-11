@@ -1,7 +1,6 @@
 package com.example.g2pedal.Model;
 
 
-import android.net.Uri;
 
 public class SearchModel {
     String id;

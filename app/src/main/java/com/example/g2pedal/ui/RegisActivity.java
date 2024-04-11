@@ -72,13 +72,6 @@ public class RegisActivity extends AppCompatActivity {
         databaseReference.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                if (snapshot.child("mail").hasChild("mail:"+mail)) {
-//                    Toast.makeText(RegisActivity.this, "mail đã có người dùng", Toast.LENGTH_SHORT).show();
-//                }else if (snapshot.hasChild(("phone"))){
-//                    Toast.makeText(RegisActivity.this, "SDT đã có người dùng", Toast.LENGTH_SHORT).show();
-//
-//                }else {
-//                }
                 UserDTO regisUser = new UserDTO(fullName, mail, phone, password);
                 registerUser(regisUser);
             }

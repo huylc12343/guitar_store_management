@@ -184,7 +184,7 @@ public class BillFragment extends Fragment {
 
             //up dữ liệu lên realtime dâtbase
             DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
-            //tham chiếu đến mục bill trong realtime database
+            //tham chiếu đến mục bill trong realtime database, taoj billID
             databaseRef.child("bill").child(orderId).setValue(bill);
 
             //cập nhật quantity và status của sản phẩm trong giỏ hàng

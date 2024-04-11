@@ -3,6 +3,7 @@ package com.example.g2pedal.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+// BillModel là giá trị singleton dùng xuyên suốt project
 
 public class BillModel {
     private static BillModel instance;

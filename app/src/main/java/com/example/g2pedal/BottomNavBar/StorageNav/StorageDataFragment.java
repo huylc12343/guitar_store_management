@@ -59,7 +59,9 @@ public class StorageDataFragment extends Fragment {
     private TextView tvStorageData;
 
     private StorageDataAdapter storageDataAdapter;
-    private Button iv_add;
+    DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("products");
+    List<StorageDataModel> productModelList = new ArrayList<>();
+
 
     public StorageDataFragment() {
         // Required empty public constructor
@@ -97,54 +99,28 @@ public class StorageDataFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_storage_data, container, false);
 
-
         tvStorageData = view.findViewById(R.id.tvStorageData);
         txtCategory = view.findViewById(R.id.tvStorageData);
         rvStorageData = view.findViewById(R.id.rv_storage_data);
         ImageButton btnBack = view.findViewById(R.id.btnStorageDataToHome);
 
-        // Thiết lập cho RecyclerView
+        //thiết lập cho RecyclerView
         rvStorageData.setHasFixedSize(true);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         rvStorageData.setLayoutManager(layoutManager);
 
-        List<StorageDataModel> productModelList = new ArrayList<>();
+        //khai báo adapter để truyền mảng chứa kiểu dữ liệu Model vào trong adapter
         storageDataAdapter = new StorageDataAdapter(getContext(), productModelList);
         rvStorageData.setAdapter(storageDataAdapter);
 
-        // Lấy tham số từ Bundle (nếu có)
+        //lấy category từ bundle
         Bundle bundle = getArguments();
         String data = bundle.getString("category");
 
-        // Xử lý dữ liệu theo ý muốn
-        // Ví dụ: Hiển thị dữ liệu lên TextView
         category = data;
         tvStorageData.setText(data);
+        queryProduct();
 
-        // Đọc dữ liệu từ Firebase
-        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("products");
-        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                productModelList.clear(); // Xóa dữ liệu cũ
-
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    // Chuyển đổi DataSnapshot thành đối tượng ProductDTO
-                    ProductDTO product = snapshot.getValue(ProductDTO.class);
-                    if (product != null && product.getCategory().equalsIgnoreCase(category)) {
-                        productModelList.add(new StorageDataModel(product.getProductId(), product.getImageUrl(), product.getName(), product.getCategory(), String.valueOf(product.getPrice()), product.getStatus()));
-                    }
-                }
-
-                // Cập nhật adapter và hiển thị dữ liệu
-                storageDataAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("Firebase", "Error when reading data", databaseError.toException());
-            }
-        });
 
         btnBack.setOnClickListener(v -> goBack());
 
@@ -156,6 +132,33 @@ public class StorageDataFragment extends Fragment {
         fragmentManager.popBackStack();
     }
 
+    private void queryProduct(){
+        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                productModelList.clear(); //xóa dữ liệu cũ
 
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    //chuyển đổi DataSnapshot thành đối tượng ProductDTO
+                    ProductDTO product = snapshot.getValue(ProductDTO.class);
+                    //hàm if lọc dữ liệu theo category, nếu dữ liệu có trường category như
+                    //yêu cầu thì add vào modelList đưa lên recyclerView
+                    if (product != null && product.getCategory().equalsIgnoreCase(category)) {
+                        productModelList.add(new StorageDataModel(product.getProductId(), product.getImageUrl(),
+                                product.getName(), product.getCategory(),
+                                String.valueOf(product.getPrice()), product.getStatus()));
+                    }
+                }
+
+                //cập nhật adapter và hiển thị dữ liệu
+                storageDataAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Firebase", "Error when reading data", databaseError.toException());
+            }
+        });
+    }
 
 }

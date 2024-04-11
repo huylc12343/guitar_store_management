@@ -126,7 +126,6 @@ public class BillFragment extends Fragment {
             }
         });
         return view;
-        // Inflate the layout for this fragment
     }
     private void goBack(){
         FragmentManager fragmentManager = getParentFragmentManager();
@@ -139,13 +138,13 @@ public class BillFragment extends Fragment {
         databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                billModelList.clear(); // Xóa dữ liệu cũ
+                billModelList.clear(); //xóa dữ liệu cũ
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    // Chuyển đổi DataSnapshot thành đối tượng ProductDTO
+                    //chuyển đổi DataSnapshot thành đối tượng ProductDTO
                     ProductDTO product = snapshot.getValue(ProductDTO.class);
                     if (product != null) {
-                        // Kiểm tra xem product có trùng id với billItemsId không
+                        //kiểm tra xem sản phẩm có trong bill không thì thêm vào adapter
                         if (billItemsId.contains(product.getProductId())) {
                             billModelList.add(new StorageDataModel(product.getProductId(),
                                     product.getImageUrl(), product.getName(), product.getCategory(),
@@ -168,39 +167,40 @@ public class BillFragment extends Fragment {
         if (billModelList.isEmpty()){
             Toast.makeText(getContext(), "Giỏ hàng trống, hãy thêm sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
         }else{
-            // Tạo thông tin đơn hàng
+            //tạo thông tin đơn hàng
             String orderId = "BILL_" + System.currentTimeMillis();
             List<String> productIds = new ArrayList<>();
             double totalPay = billModel.getPay();
 
-            // Lấy danh sách id sản phẩm từ billModel
+            //lấy danh sách id sản phẩm từ billModel
             for (StorageDataModel item : billModelList) {
                 productIds.add(item.getId());
             }
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             String currentDate = dateFormat.format(new Date());
 
-            // Tạo đối tượng Order
+            //tạo đối tượng bill
             BillDTO bill = new BillDTO(orderId, productIds, totalPay, currentDate);
 
-            // Thực hiện cập nhật lên Firebase Realtime Database
+            //up dữ liệu lên realtime dâtbase
             DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+            //tham chiếu đến mục bill trong realtime database
             databaseRef.child("bill").child(orderId).setValue(bill);
 
-            // Cập nhật quantity và status của sản phẩm trong giỏ hàng
+            //cập nhật quantity và status của sản phẩm trong giỏ hàng
             for (String productId : billItemsId) {
+                //tìm các sản phẩm có trong products và se lại value
                 databaseRef.child("products").child(productId).child("quantity").setValue(0);
                 databaseRef.child("products").child(productId).child("status").setValue("Sold Out");
             }
 
-            // Xóa giỏ hàng sau khi thanh toán
+            //clear giỏ hàng sau khi thanh toán
             billModel.clearBill();
 
-            // Hiển thị thông báo hoàn thành thanh toán
             Toast.makeText(getContext(), "Đã thanh toán thành công!", Toast.LENGTH_SHORT).show();
             billModelList.clear();
+
             txt_pay.setText("Tổng hóa đơn: 0.0 Dollar");
-            // Refresh danh sách sản phẩm trong giỏ hàng
             billAdapter.notifyDataSetChanged();
         }
     }

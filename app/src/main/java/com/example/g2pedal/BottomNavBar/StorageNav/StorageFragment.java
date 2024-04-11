@@ -33,7 +33,6 @@ public class StorageFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    ImageView backbtn;
 
 
     public StorageFragment() {
@@ -113,15 +112,18 @@ public class StorageFragment extends Fragment {
 
         return view;
     }
+    // hàm thay thế fragment bằng fragment chứa dữ liệu lấy từ realtime database được đổ ở trong recycler view
     private void replaceFragment(Fragment fragment,String category){
+
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
+        // truyền dữ liệu để xác định được dữ liệu sẽ lấy từ trên firebase
         Bundle bundle = new Bundle();
         bundle.putString("category", category);
         fragment.setArguments(bundle);
 
         fragmentTransaction.replace(R.id.frame_layout,fragment);
+        //đẩy fragment vào stack, nếu ấn nút back thì sẽ quay về fragment này
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

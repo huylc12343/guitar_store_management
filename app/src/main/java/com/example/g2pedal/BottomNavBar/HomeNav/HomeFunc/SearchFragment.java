@@ -89,6 +89,7 @@ public class SearchFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBarSearch);
         rv_search = view.findViewById(R.id.rv_search_fragment);
 
+        //set giá trị cho recyclerview
         rv_search.setHasFixedSize(true);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 1);
         rv_search.setLayoutManager(layoutManager);
@@ -96,23 +97,11 @@ public class SearchFragment extends Fragment {
         searchAdapter = new SearchAdapter(getContext(), searchModelList);
         rv_search.setAdapter(searchAdapter);
 
-
         ImageButton btnBack = view.findViewById(R.id.btnSearchToHome);
         ImageButton btnSearch = view.findViewById(R.id.btnSearchProduct);
 
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                queryProduct(txtSearch.getText().toString());
-            }
-        });
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goBack();
-            }
-        });
-
+        btnSearch.setOnClickListener(v->queryProduct(txtSearch.getText().toString()));
+        btnBack.setOnClickListener(v->goBack());
 
         return view;
     }
@@ -124,33 +113,30 @@ public class SearchFragment extends Fragment {
     private void queryProduct(String searchText) {
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("products");
         progressBar.setVisibility(View.VISIBLE);
-        // Sửa lại: Sử dụng searchText để tìm kiếm sản phẩm theo tên
+        //lấy key từ edittext và tìm kiếm theo tên
         databaseRef.orderByChild("name")
-                .startAt(searchText)
-                .endAt(searchText + "\uf8ff")
+                .startAt(searchText) // tìm kiếm theo key
+                .endAt(searchText + "\uf8ff") // và sau đó là bất cứ thứ gì
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        searchModelList.clear(); // Xóa dữ liệu cũ
-
+                        searchModelList.clear(); //xóa dữ liệu cũ
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            // Chuyển đổi DataSnapshot thành đối tượng ProductDTO
                             ProductDTO product = snapshot.getValue(ProductDTO.class);
-                            // Sửa lại: Bỏ điều kiện so sánh với category
                             if (product != null) {
-                                // Chú ý: Cần đảm bảo constructor của SearchModel phù hợp với các trường bạn muốn sử dụng
-                                searchModelList.add(new SearchModel(product.getProductId(), product.getImageUrl(), product.getCategory(), product.getName(), product.getBrand(), product.getColor(), product.getQuantity() + "", product.getPrice() + "", product.getStatus(), product.getImportDate()));
-
+                                searchModelList.add(new SearchModel(product.getProductId(),
+                                        product.getImageUrl(), product.getCategory(), product.getName(),
+                                        product.getBrand(), product.getColor(), product.getQuantity() + "",
+                                        product.getPrice() + "", product.getStatus(), product.getImportDate()));
                             }
                         }
                         progressBar.setVisibility(View.GONE);
-                        // Cập nhật adapter và hiển thị dữ liệu
+                        //cập nhật adapter và hiển thị dữ liệu
                         searchAdapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        Log.e("Firebase", "Error when reading data", databaseError.toException());
                     }
                 });
     }

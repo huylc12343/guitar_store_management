@@ -16,7 +16,7 @@ import com.example.g2pedal.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -24,14 +24,13 @@ public class LoginActivity extends AppCompatActivity {
     TextView tvRegis;
     ProgressBar progressBar;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference databaseReference;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-//        databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://g2pedal-default-rtdb.firebaseio.com/");
         firebaseAuth = FirebaseAuth.getInstance();
 
         progressBar = findViewById(R.id.progressBarlg);
@@ -44,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String getMailTxt = txtUsername.getText().toString();
                 String getPasswordTxt = txtPassword.getText().toString();
+                //CheckNull text view trước khi login
 
                 if (getMailTxt.isEmpty() || getPasswordTxt.isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Nhập username hoặc password", Toast.LENGTH_SHORT).show();
@@ -52,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+        //Mở Activity đăng ký
         tvRegis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+    //func Login vào Main Activity
     private void login(String email, String password){
         progressBar.setVisibility(View.VISIBLE);
         if (firebaseAuth != null) {

@@ -16,18 +16,21 @@ public class UserDAO {
     }
 
     public void getUserData(String uid, final OnUserDataLoadedListener listener) {
+        // tham chiếu tới người dùng trong user qua id
         DatabaseReference userRef = databaseReference.child(uid);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            // tạo listener cho từng thay đôir giá trị
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    // Lấy dữ liệu từ snapshot và tạo đối tượng UserDTO
+                    // Truy cập datasnaphot và tạo đối tượng UserDTO từ dữ liệu truy cập từ datasnapshot
                     String fullName = snapshot.child("FullName").getValue(String.class);
                     String email = snapshot.child("Mail").getValue(String.class);
                     String password = snapshot.child("Password").getValue(String.class);
                     String phone = snapshot.child("Phone").getValue(String.class);
                     UserDTO user = new UserDTO(fullName, email, phone, password);
                     user.setUid(uid);
+                    // Sau khi truyền dữ liệu xong thì sẽ Load dữ liệu vào trong đối tượng user
                     listener.onUserDataLoaded(user);
                 } else {
                     // Người dùng không tồn tại trong cơ sở dữ liệu
@@ -37,7 +40,6 @@ public class UserDAO {
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Xử lý lỗi
                 listener.onDataLoadFailed(error.getMessage());
             }
         });

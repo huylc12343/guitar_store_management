@@ -83,20 +83,21 @@ public class UserFragment extends Fragment {
 
         UserDAO userDAO = new UserDAO();
         View view = inflater.inflate(R.layout.fragment_user, container, false);
-        listView = (ListView) view.findViewById(R.id.userNavListview);
+        listView = view.findViewById(R.id.userNavListview);
         userList = createUserList();
         btnLogOut = view.findViewById(R.id.btnLogout);
+        // lấy Uid từ bundle
         String uid = getArguments().getString("uid");
 
+        fullname = view.findViewById(R.id.userFragUserFullname);
+        mail = view.findViewById(R.id.userFragMail);
+        phonetv = view.findViewById(R.id.userFragPhone);
 
-        fullname = (TextView)view.findViewById(R.id.userFragUserFullname);
-        mail = (TextView)view.findViewById(R.id.userFragMail);
-        phonetv = (TextView)view.findViewById(R.id.userFragPhone);
-
+        //tạo list view hiển thị các hoạt động đổi mật khẩu, thông tin người dùng (chưa haoafn thành)
         adapter = new UserAdapter(requireContext(), userList);
-
         listView.setAdapter(adapter);
-        avatar = (ImageView) view.findViewById(R.id.userAvatarFunc);
+        avatar = view.findViewById(R.id.userAvatarFunc);
+
         btnLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,8 +110,8 @@ public class UserFragment extends Fragment {
             }
         });
 
+        //load dữ liệu từ Firebase có chứa Uid được truyền từ MainActivity vào
         userDAO.getUserData(uid, new UserDAO.OnUserDataLoadedListener()  {
-
             @Override
             public void onUserDataLoaded(UserDTO user) {
                 fullname.setText(user.getFullName());

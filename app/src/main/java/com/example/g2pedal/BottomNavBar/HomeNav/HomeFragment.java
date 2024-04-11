@@ -71,40 +71,15 @@ public class HomeFragment extends Fragment {
         btnBill = view.findViewById(R.id.btnBill);
         btnAddStorage = view.findViewById(R.id.btnAddStorage);
         btnHistory = view.findViewById(R.id.btnHistory);
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openSearchActivity();
-            }
-        });
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openSearchActivity();
-            }
-        });
-        btnBill.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openBillActivity();
-            }
-        });
-        btnAddStorage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openAddStorageActivity();
-            }
-        });
-        btnHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openHistoryActivity();
-            }
-        });
-        // Inflate the layout for this fragment
+
+        btnSearch.setOnClickListener(v->openSearchActivity());
+        btnBill.setOnClickListener(v->openBillActivity());
+        btnAddStorage.setOnClickListener(v->openAddStorageActivity());
+        btnHistory.setOnClickListener(v->openHistoryActivity());
+
         return view;
     }
-
+    //hàm mở fragment
     private void openSearchActivity(){
         replaceFragment(new SearchFragment());
     }
@@ -120,6 +95,7 @@ public class HomeFragment extends Fragment {
         replaceFragment(new HistoryFragment());
 
     }
+    //hàm thay thế fragment
     private void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

@@ -89,10 +89,10 @@ public class HistoryFragment extends Fragment {
         HistoryAdapter adapter = new HistoryAdapter(getContext(), historyModels);
         rvStorageData.setAdapter(adapter);
 
-        // Lấy dữ liệu từ Firebase Realtime Database
+        //tham chiếu vào bill trong realtime database
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("bill");
 
-// Sắp xếp các bill theo thuộc tính "date"
+        //sắp xếp các bill theo thuộc tính "date"
         databaseReference.orderByChild("date").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -100,13 +100,12 @@ public class HistoryFragment extends Fragment {
                     String billId = billSnapshot.child("billId").getValue(String.class);
                     String date = billSnapshot.child("date").getValue(String.class);
                     Double totalPay = billSnapshot.child("totalPay").getValue(Double.class);
-
+                    //tham chiếu vào trong productIds để lấy id sản phẩm đã bán
                     List<String> productIds = new ArrayList<>();
                     for (DataSnapshot productSnapshot : billSnapshot.child("productIds").getChildren()) {
                         String productId = productSnapshot.getValue(String.class);
                         productIds.add(productId);
                     }
-
                     HistoryModel historyModel = new HistoryModel(billId, productIds, totalPay, date);
                     historyModels.add(historyModel);
                 }

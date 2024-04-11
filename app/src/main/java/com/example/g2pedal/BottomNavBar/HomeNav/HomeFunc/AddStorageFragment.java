@@ -5,14 +5,12 @@ import static android.app.Activity.RESULT_OK;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -28,7 +26,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -110,50 +107,39 @@ public class AddStorageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //hàm chuyển đổi fragment thành view
         View view = inflater.inflate(R.layout.fragment_add_storage, container, false);
-
+        //ánh xa;
         productIMG = view.findViewById(R.id.productIMG);
         productNameEditText = view.findViewById(R.id.productNameEditText);
         productPriceEditText = view.findViewById(R.id.productPriceEditText);
         productColorEditText = view.findViewById(R.id.productColorEditText);
         productCategoryEditText = view.findViewById(R.id.productCategoryEditText);
-
+        //các item trong spinner combobox category
         ArrayList categoryList = new ArrayList<>();
         categoryList.add("guitar");
         categoryList.add("amplifier");
         categoryList.add("pedal");
         categoryList.add("other");
-
+        //adapter cho spinner
         categoryAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, categoryList);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         productCategoryEditText.setAdapter(categoryAdapter);
-
 
         productQtyEditText = view.findViewById(R.id.productQtyEditText);
         productBrandEditText = view.findViewById(R.id.productBrandEditText);
         progressBar = view.findViewById(R.id.progressBar);
 
         btnAdd = view.findViewById(R.id.btnAddNewProduct);
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadImage();
-            }
-        });
-        productIMG.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openImagePicker();
-            }
-        });
+        //upload cả ảnh và sản phẩm lên firestore, upload ảnh trước rồi upload thông tin sản phẩm
+        //trong thông tin sản phẩm sẽ có url của ảnh
+        btnAdd.setOnClickListener(v->uploadImage());
+        //mở Intent chọn ảnh
+        productIMG.setOnClickListener(v->openImagePicker());
+
 
         ImageButton btnBack = view.findViewById(R.id.btnAddStorageToHome);
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goBack();
-            }
-        });
+        btnBack.setOnClickListener(v->goBack());
         return view;
     }
     private void goBack(){
@@ -171,17 +157,8 @@ public class AddStorageFragment extends Fragment {
             startActivityForResult(intent, PICK_IMAGE_REQUEST);
         }
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PICK_IMAGE_REQUEST && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            openImagePicker();
-        } else {
-            Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show(); // Sửa thành getActivity()
-        }
-    }
-
+    //hàm này được gọi sau khi Intent chọn ảnh đóng lại
+    //sau đó lưu pathUri và gán uri cho ImageView
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -190,8 +167,20 @@ public class AddStorageFragment extends Fragment {
             productIMG.setImageURI(pathUri);
         }
     }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        if (requestCode == PICK_IMAGE_REQUEST && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//            openImagePicker();
+//        } else {
+//            Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show(); // Sửa thành getActivity()
+//        }
+//    }
+
+
 
     private void uploadImage() {
+        //lấy dữ liệu từ EditText để check null
         String name = productNameEditText.getText().toString();
         String brand = productBrandEditText.getText().toString();
 //        String category = productCategoryEditText.getText().toString();
@@ -206,18 +195,20 @@ public class AddStorageFragment extends Fragment {
             Toast.makeText(getContext(), "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
             return;
         }
+
         if (pathUri != null) {
-            progressBar.setVisibility(View.VISIBLE); // Hiển thị ProgressBar khi bắt đầu tải lên
+            progressBar.setVisibility(View.VISIBLE); //hiển thị ProgressBar
+            // tạo đường dẫn tới storage và lưu nó với tên được tạo tự động
             StorageReference fileRef = storage.getReference().child("images/" + System.currentTimeMillis() + ".png");
             fileRef.putFile(pathUri)
                     .addOnProgressListener(taskSnapshot -> {
                         double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                        progressBar.setProgress((int) progress); // Cập nhật tiến độ của ProgressBar
+                        progressBar.setProgress((int) progress); //cập nhật tiến độ progress bar khi up ảnh
                     })
                     .addOnSuccessListener(taskSnapshot -> {
+                        //lấy url download ảnh
                         fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
                             String photoUrl = uri.toString();
-
                             uploadProduct(photoUrl);
                             progressBar.setVisibility(View.INVISIBLE); // Ẩn ProgressBar sau khi tải lên thành công
                         });
@@ -234,14 +225,14 @@ public class AddStorageFragment extends Fragment {
 
 
     private void uploadProduct(String photoUrl) {
-
+        //bị lặp lấy dữ liệu
         String name = productNameEditText.getText().toString();
         String brand = productBrandEditText.getText().toString();
         String category = productCategoryEditText.getSelectedItem().toString();
         String color = productColorEditText.getText().toString();
         String priceText = productPriceEditText.getText().toString();
         String quantityText = productQtyEditText.getText().toString();
-
+        //set ngày nhập tự động
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
         String importDate = sdf.format(new Date());
 
@@ -251,10 +242,11 @@ public class AddStorageFragment extends Fragment {
         product.setCategory(category);
         product.setColor(color);
         product.setImportDate(importDate);
-
+        // tự khởi tạo product id với 1 format riêng
         String productId = "PROD_" + System.currentTimeMillis();
         product.setProductId(productId);
-
+        //check trạng thái còn hàng hay hết hàng(thuộc tính này luôn được tự động set là 1 vì chưa xử lý được
+        // các lớp liên quan đến số lượng)
         String status = (Integer.parseInt(quantityText) == 0) ? "Sold Out" : "In Stock";
         product.setStatus(status);
 
@@ -262,6 +254,7 @@ public class AddStorageFragment extends Fragment {
             double price = Double.parseDouble(priceText);
             int quantity = Integer.parseInt(quantityText);
             product.setPrice(price);
+            //tự động set quantity bằng 1
             product.setQuantity(quantity);
         } catch (NumberFormatException e) {
             Toast.makeText(getContext(), "Lỗi định dạng số", Toast.LENGTH_SHORT).show();
@@ -269,15 +262,17 @@ public class AddStorageFragment extends Fragment {
         }
 
         product.setImageUrl(photoUrl);
-
+        //đặt tên cho sản phẩm bằng id sản phẩm
         String documentName = "PROD_" + System.currentTimeMillis();
+        //tham chiếu đến sản phẩm
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("products").child(documentName);
 
         product.setProductId(documentName);
 
-// Up dữ liệu lên Realtime Database
+        //up dữ liệu lên realtime database
+        //chưa có clear EditText
         databaseRef.setValue(product)
-                .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(a -> Toast.makeText(getContext(), "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Lỗi khi thêm sản phẩm: " + e.getMessage(), Toast.LENGTH_SHORT).show());
 
     }

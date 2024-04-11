@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import java.util.List;
 import com.example.g2pedal.R;
 public class UserAdapter extends ArrayAdapter<String> {
-
+    //adapter truyền dữ liệu vào listview
     public UserAdapter(Context context, List<String> userList) {
         super(context, 0, userList);
     }

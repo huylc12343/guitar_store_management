@@ -33,9 +33,12 @@ public class RegisActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_regis);
 
+        //Tham chiếu đến cơ sở dữ liệu qua đường link url
         databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://g2pedal-default-rtdb.firebaseio.com/");
+        //khởi tạo 1 đối tượng singleton để xác thực các thông tin người dùng
         firebaseAuth = FirebaseAuth.getInstance();
 
+        //ánh xạ
         EditText fullName = findViewById(R.id.rgFullname);
         EditText phone = findViewById(R.id.rgPhone);
         EditText mail = findViewById(R.id.rgEmail);
@@ -50,36 +53,29 @@ public class RegisActivity extends AppCompatActivity {
                 String getPhoneForm = phone.getText().toString();
                 String getMailForm = mail.getText().toString();
                 String getPasswordForm = password.getText().toString();
-
+                //CheckNull EditText trước khi đăng ký tài khoản mới
                 if (getFullNameForm.isEmpty() || getPhoneForm.isEmpty() || getMailForm.isEmpty()
                         || getPasswordForm.isEmpty()) {
                     Toast.makeText(RegisActivity.this, "Hãy điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
                 } else {
-                    checkExistingUser(getFullNameForm,getMailForm,getPhoneForm, getPasswordForm);
+                    //tạo đối tượng User để sử dụng trong hàm đăng ký người dùng
+                    createUser(getFullNameForm,getMailForm,getPhoneForm, getPasswordForm);
                 }
             }
         });
-
+        //quay lại Activity Login
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(RegisActivity.this, LoginActivity.class));
-                finish();
+                finish();//kết thúc Activity đăng ký
             }
         });
     }
-    public void checkExistingUser(String fullName, String mail, String phone, String password) {
-        databaseReference.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                UserDTO regisUser = new UserDTO(fullName, mail, phone, password);
-                registerUser(regisUser);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+    public void createUser(String fullName, String mail, String phone, String password) {
+        UserDTO regisUser = new UserDTO(fullName, mail, phone, password);
+        registerUser(regisUser);
     }
     private void registerUser(UserDTO user) {
         firebaseAuth.createUserWithEmailAndPassword(user.getMail(), user.getPassword())
@@ -90,6 +86,7 @@ public class RegisActivity extends AppCompatActivity {
                             Toast.makeText(RegisActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(RegisActivity.this, LoginActivity.class);
                             startActivity(intent);
+                            //đẩy dữ liệu vào realtime database khi đăng ký thành công
                             pushInfoUser(user);
                         } else {
                             Toast.makeText(RegisActivity.this, "Email đã tồn tại, đổi tài khoản email khác " , Toast.LENGTH_SHORT).show();
@@ -97,27 +94,13 @@ public class RegisActivity extends AppCompatActivity {
                     }
                 });
     }
+    // hàm dữ liệu sau khi đăng ký lên realtime database
     private void pushInfoUser(UserDTO user){
-        databaseReference.child("users").child(user.getPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    Toast.makeText(RegisActivity.this, "Số điện thoại đã có người dùng", Toast.LENGTH_SHORT).show();
-                } else {
-                    String uid = firebaseAuth.getUid().toString();
-                    databaseReference.child("users").child(uid).child("FullName").setValue(user.getFullName());
-                    databaseReference.child("users").child(uid).child("Phone").setValue(user.getPhone());
-                    databaseReference.child("users").child(uid).child("Mail").setValue(user.getMail());
-                    databaseReference.child("users").child(uid).child("Password").setValue(user.getPassword());
-                    Toast.makeText(RegisActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        String uid = firebaseAuth.getUid();
+        databaseReference.child("users").child(uid).child("FullName").setValue(user.getFullName());
+        databaseReference.child("users").child(uid).child("Phone").setValue(user.getPhone());
+        databaseReference.child("users").child(uid).child("Mail").setValue(user.getMail());
+        databaseReference.child("users").child(uid).child("Password").setValue(user.getPassword());
+        Toast.makeText(RegisActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
     }
 }

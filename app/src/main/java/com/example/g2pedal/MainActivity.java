@@ -37,9 +37,12 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = binding.bottomNavigationView;
 
         UserDAO userDAO = new UserDAO();
+        // lấy dữ liệu uid từ bundle, có thể lấy từ hàm getInstance cũng được
         Intent intent = getIntent();
         String uid = intent.getStringExtra("uid");
+
         userDAO.getUserData(uid, new UserDAO.OnUserDataLoadedListener()  {
+            //lấy dữ liệu tên từ firesbase và truyền EditText
 
             @Override
             public void onUserDataLoaded(UserDTO user) {
@@ -50,14 +53,15 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onUserNotFound() {
-                // Người dùng không tồn tại trong cơ sở dữ liệu
+
             }
 
             @Override
             public void onDataLoadFailed(String errorMessage) {
-                // Xử lý khi có lỗi xảy ra trong quá trình tải dữ liệu
+
             }
         });
+        //đặt sự kiện chuyển đổi menu
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
@@ -68,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(new StorageFragment());
                 } else if (id == R.id.userNav) {
                     Intent intent = getIntent();
+                    //get Bundle và truyền vào userFragment
                     String toFragPhone = intent.getStringExtra("uid");
                     UserFragment fragment = new UserFragment();
                     Bundle bundle = new Bundle();
@@ -82,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         notiBtn = binding.notificationButton;
         notiBtn.setOnClickListener(v->openNotiActivity());
     }
-
+    //thay đổi Fragment
     private void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

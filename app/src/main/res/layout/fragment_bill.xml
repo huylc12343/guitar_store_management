@@ -22,7 +22,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Hóa đơn"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/size30sp"
+                    android:text="Hóa đơn thanh toán"
                     android:gravity="center"/>
 
                 <ImageButton

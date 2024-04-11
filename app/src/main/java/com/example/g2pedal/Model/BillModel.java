@@ -1,5 +1,7 @@
 package com.example.g2pedal.Model;
 
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,8 @@ public class BillModel {
         productId.add(product.getId());
         double price = Double.parseDouble(product.getPrice());
         pay += price;
+
+
     }
     public void removeFromBill(StorageDataModel product,int position){
         productId.remove(product.id);

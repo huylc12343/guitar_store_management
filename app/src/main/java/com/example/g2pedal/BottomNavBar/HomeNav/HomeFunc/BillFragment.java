@@ -1,9 +1,9 @@
 package com.example.g2pedal.BottomNavBar.HomeNav.HomeFunc;
 
-import android.net.Uri;
+
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -24,7 +24,6 @@ import com.example.g2pedal.Adapter.BillAdapter;
 import com.example.g2pedal.DTO.BillDTO;
 import com.example.g2pedal.DTO.ProductDTO;
 import com.example.g2pedal.Model.BillModel;
-import com.example.g2pedal.Model.SearchModel;
 import com.example.g2pedal.Model.StorageDataModel;
 import com.example.g2pedal.R;
 import com.google.firebase.database.DataSnapshot;
@@ -166,40 +165,44 @@ public class BillFragment extends Fragment {
         });
     }
     private void completePayment() {
-        // Tạo thông tin đơn hàng
-        String orderId = "BILL_" + System.currentTimeMillis();
-        List<String> productIds = new ArrayList<>();
-        double totalPay = billModel.getPay();
+        if (billModelList.isEmpty()){
+            Toast.makeText(getContext(), "Giỏ hàng trống, hãy thêm sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+        }else{
+            // Tạo thông tin đơn hàng
+            String orderId = "BILL_" + System.currentTimeMillis();
+            List<String> productIds = new ArrayList<>();
+            double totalPay = billModel.getPay();
 
-        // Lấy danh sách id sản phẩm từ billModel
-        for (StorageDataModel item : billModelList) {
-            productIds.add(item.getId());
+            // Lấy danh sách id sản phẩm từ billModel
+            for (StorageDataModel item : billModelList) {
+                productIds.add(item.getId());
+            }
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            String currentDate = dateFormat.format(new Date());
+
+            // Tạo đối tượng Order
+            BillDTO bill = new BillDTO(orderId, productIds, totalPay, currentDate);
+
+            // Thực hiện cập nhật lên Firebase Realtime Database
+            DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+            databaseRef.child("bill").child(orderId).setValue(bill);
+
+            // Cập nhật quantity và status của sản phẩm trong giỏ hàng
+            for (String productId : billItemsId) {
+                databaseRef.child("products").child(productId).child("quantity").setValue(0);
+                databaseRef.child("products").child(productId).child("status").setValue("Sold Out");
+            }
+
+            // Xóa giỏ hàng sau khi thanh toán
+            billModel.clearBill();
+
+            // Hiển thị thông báo hoàn thành thanh toán
+            Toast.makeText(getContext(), "Đã thanh toán thành công!", Toast.LENGTH_SHORT).show();
+            billModelList.clear();
+            txt_pay.setText("Tổng hóa đơn: 0.0 Dollar");
+            // Refresh danh sách sản phẩm trong giỏ hàng
+            billAdapter.notifyDataSetChanged();
         }
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        String currentDate = dateFormat.format(new Date());
-
-        // Tạo đối tượng Order
-        BillDTO bill = new BillDTO(orderId, productIds, totalPay, currentDate);
-
-        // Thực hiện cập nhật lên Firebase Realtime Database
-        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
-        databaseRef.child("bill").child(orderId).setValue(bill);
-
-        // Cập nhật quantity và status của sản phẩm trong giỏ hàng
-        for (String productId : billItemsId) {
-            databaseRef.child("products").child(productId).child("quantity").setValue(0);
-            databaseRef.child("products").child(productId).child("status").setValue("Sold Out");
-        }
-
-        // Xóa giỏ hàng sau khi thanh toán
-        billModel.clearBill();
-
-        // Hiển thị thông báo hoàn thành thanh toán
-        Toast.makeText(getContext(), "Đã thanh toán thành công!", Toast.LENGTH_SHORT).show();
-        billModelList.clear();
-        txt_pay.setText("Tổng hóa đơn: 0.0 Dollar");
-        // Refresh danh sách sản phẩm trong giỏ hàng
-        billAdapter.notifyDataSetChanged();
     }
     public void updateTotalPay(double totalPay) {
         String totalText = "Tổng hóa đơn: " + totalPay + " Dollar";

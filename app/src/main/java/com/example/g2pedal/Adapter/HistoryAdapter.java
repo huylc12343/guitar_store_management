@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.g2pedal.DTO.BillDTO;
 import com.example.g2pedal.Model.HistoryModel;
 import com.example.g2pedal.R;
 

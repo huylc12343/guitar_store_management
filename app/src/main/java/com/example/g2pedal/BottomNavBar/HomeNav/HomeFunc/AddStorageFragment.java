@@ -23,8 +23,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.os.Environment;
-import android.provider.MediaStore;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,23 +40,13 @@ import android.widget.Toast;
 
 import com.example.g2pedal.DTO.ProductDTO;
 import com.example.g2pedal.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,8 +64,6 @@ public class AddStorageFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private static final int PICK_IMAGE_REQUEST = 1;
-    private Uri imgUri;
-    private Bitmap bitmap;
     private Uri pathUri;
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -87,7 +74,6 @@ public class AddStorageFragment extends Fragment {
             productQtyEditText,productBrandEditText;
     private Spinner productCategoryEditText ;
 
-    private List<String> categoryList;
     private ArrayAdapter<String> categoryAdapter;
     ImageView productIMG;
     public AddStorageFragment() {
@@ -142,7 +128,6 @@ public class AddStorageFragment extends Fragment {
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         productCategoryEditText.setAdapter(categoryAdapter);
 
-        // Set a listener to handle the category selection
 
         productQtyEditText = view.findViewById(R.id.productQtyEditText);
         productBrandEditText = view.findViewById(R.id.productBrandEditText);
@@ -166,7 +151,6 @@ public class AddStorageFragment extends Fragment {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Quay lại HomeFragment
                 goBack();
             }
         });
@@ -271,11 +255,9 @@ public class AddStorageFragment extends Fragment {
         String productId = "PROD_" + System.currentTimeMillis();
         product.setProductId(productId);
 
-        // Thay đổi theo logic ứng dụng của bạn
         String status = (Integer.parseInt(quantityText) == 0) ? "Sold Out" : "In Stock";
         product.setStatus(status);
 
-        // Chuyển đổi kiểu dữ liệu từ String sang Double và Integer
         try {
             double price = Double.parseDouble(priceText);
             int quantity = Integer.parseInt(quantityText);

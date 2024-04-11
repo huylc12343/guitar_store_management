@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.g2pedal.BottomNavBar.HomeNav.HomeFunc.BillFragment;
 import com.example.g2pedal.Model.BillModel;
-import com.example.g2pedal.Model.SearchModel;
 import com.example.g2pedal.Model.StorageDataModel;
 import com.example.g2pedal.R;
 import com.squareup.picasso.Picasso;

@@ -1,11 +1,9 @@
 package com.example.g2pedal.Adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -83,8 +81,15 @@ public class StorageDataAdapter extends RecyclerView.Adapter<StorageDataAdapter.
         }
     }
     private void add(StorageDataModel product){
-        bill.getInstance().addToBill(product);
-        Toast.makeText(context, "Đã thêm sảm phẩm " + product.getTittle()+" vào giỏ hàng!!", Toast.LENGTH_SHORT).show();
+        String id = product.getId();
+        if(bill.getBillItems().contains(id)){
+            Toast.makeText(context, "Sản phẩm đã có trong giỏ hàng", Toast.LENGTH_SHORT).show();
+        } else if (product.getStatus().equals("Sold Out")) {
+            Toast.makeText(context, "Sản phẩm tạm hết hàng", Toast.LENGTH_SHORT).show();
+        } else{
+            bill.getInstance().addToBill(product);
+            Toast.makeText(context, "Đã thêm sảm phẩm " + product.getTittle()+" vào giỏ hàng!!", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

@@ -21,6 +21,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Thêm sản phẩm"
+                android:textStyle="bold"
+                android:textSize="@dimen/size30sp"
                 android:gravity="center"/>
 
             <ImageButton
@@ -38,16 +40,15 @@
     </LinearLayout>
     <ImageView
         android:id="@+id/productIMG"
-        android:layout_width= "100dp"
-        android:layout_height="100dp"
+        android:layout_width= "150dp"
+        android:layout_height="150dp"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/guitar_1"
+        android:src="@drawable/image_add_svgrepo_com"
         />
     <EditText
         android:id="@+id/productNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
         android:hint="Product Name" />
         <EditText
             android:id="@+id/productPriceEditText"
@@ -58,7 +59,6 @@
             android:id="@+id/productColorEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
             android:hint="color" />
 <!--        <EditText-->
 <!--            android:id="@+id/productCategoryEditText"-->
@@ -82,7 +82,6 @@
             android:layout_height="wrap_content"
             android:hint="Số lượng" />
         <EditText
-            android:padding="10dp"
             android:id="@+id/productBrandEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

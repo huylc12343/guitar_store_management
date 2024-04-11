@@ -18,7 +18,7 @@
             android:id="@+id/txtSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Tìm kiếm"
+            android:hint="Tìm kiếm sản phẩm"
             android:gravity="center"/>
         <ImageButton
             android:id="@+id/btnSearchProduct"

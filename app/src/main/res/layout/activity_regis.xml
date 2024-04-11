@@ -1,44 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_centerVertical="true"
-    android:layout_margin="20dp"
-    android:padding="@dimen/size10dp"
-    tools:context=".ui.RegisActivity">
-    <EditText
-        android:id="@+id/rgFullname"
+    android:layout_width="match_parent"
+    >
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="FullName"/>
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/regis_background" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center_vertical"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical"
+        android:padding="@dimen/size10dp"
+        tools:context=".ui.RegisActivity">
 
-    <EditText
-        android:id="@+id/rgEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Mail"/>
-    <EditText
-        android:id="@+id/rgPhone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Phone"/>
-    <EditText
-        android:id="@+id/rgPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Đăng ký"
+            android:textSize="@dimen/size30sp"
+            android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/btnRegisrg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Đăng ký"/>
-    <Button
-        android:id="@+id/btnBackLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Quay lại"/>
-</LinearLayout>
+        <EditText
+            android:padding="@dimen/size10dp"
+            android:layout_marginLeft="@dimen/size10dp"
+            android:layout_marginRight="@dimen/size10dp"
+            android:layout_marginBottom="@dimen/size10dp"
+            android:background="@color/white"
+            android:textColorHint="@color/gray"
+            android:id="@+id/rgFullname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="FullName" />
+
+        <EditText
+            android:padding="@dimen/size10dp"
+            android:layout_marginLeft="@dimen/size10dp"
+            android:layout_marginRight="@dimen/size10dp"
+            android:layout_marginBottom="@dimen/size10dp"
+            android:background="@color/white"
+            android:textColorHint="@color/gray"
+            android:id="@+id/rgEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Mail" />
+
+        <EditText
+            android:padding="@dimen/size10dp"
+            android:layout_marginLeft="@dimen/size10dp"
+            android:layout_marginRight="@dimen/size10dp"
+            android:layout_marginBottom="@dimen/size10dp"
+            android:background="@color/white"
+            android:textColorHint="@color/gray"
+            android:id="@+id/rgPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Phone" />
+
+        <EditText
+            android:padding="@dimen/size10dp"
+            android:layout_marginLeft="@dimen/size10dp"
+            android:layout_marginRight="@dimen/size10dp"
+            android:layout_marginBottom="@dimen/size10dp"
+            android:background="@color/white"
+            android:textColorHint="@color/gray"
+            android:id="@+id/rgPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password" />
+
+        <Button
+            android:id="@+id/btnRegisrg"
+            android:text="Đăng ký"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/size10dp"
+            android:background="@color/green"
+            android:layout_marginLeft="@dimen/size10dp"
+            android:layout_marginRight="@dimen/size10dp"
+            android:layout_marginBottom="@dimen/size10dp"/>
+
+        <Button
+            android:id="@+id/btnBackLogin"
+            android:text="Quay lại"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/size10dp"
+            android:background="@color/green"
+            android:layout_marginLeft="@dimen/size10dp"
+            android:layout_marginRight="@dimen/size10dp"
+            android:layout_marginBottom="@dimen/size10dp"/>
+    </LinearLayout>
+</RelativeLayout>
